@@ -1,19 +1,8 @@
-<b>AzaharPlus</b> is a fork of the Azahar 3DS emulator with extra features.
+<b>AzahaRGDS</b> (pronounced "Azahar GDS") is a fork of the Azahar Plus emulator designed specifically for the Anbernic RGDS. It contains some performance tweaks and takes advantage of that little PATHETIC processor.
 
-Each version is the same as the corresponding version of Azahar exept for this:
-- Compatibility with all game files. If a file works with any Citra fork, it works with AzaharPlus.
-- Ability to download system files from official servers. No need for an actual 3DS.
-- Compatibility with older CPUs (no SSE4.2 required)
-- Compatibility with Android 9
-- ZipPass: A new way to exchange StreetPass data through zip files
-- Built in cheats
-- Amiibo generation
-- Better multiplayer compatibility with other Citra forks
+Nothing that special here really, just... install it if you want. It's very unstable and I suggest only using it on sh#tty handhelds that can't run normal Azahar like the RGDS.
 
-The Azahar logo is the property of PabloMK7 and angyartanddraw
----
-
-![Azahar Emulator](https://azahar-emu.org/resources/images/logo/azahar-name-and-logo.svg)
+![Azahar Emulator](https://github.com/shunoni/AzahaRGDS/blob/AzaharPlus/logo.jpg?raw=true)
 ![Plus](https://cdn-icons-png.flaticon.com/128/226/226974.png)
 
 ![GitHub Release](https://img.shields.io/github/v/release/AzaharPlus/AzaharPlus?label=Current%20Release)
