@@ -64,11 +64,11 @@ public:
     }
 
     [[nodiscard]] u32 GetScaledWidth() const noexcept {
-        return width * res_scale;
+        return static_cast<u32>(width * res_scale);
     }
 
     [[nodiscard]] u32 GetScaledHeight() const noexcept {
-        return height * res_scale;
+        return static_cast<u32>(height * res_scale);
     }
 
     [[nodiscard]] Common::Rectangle<u32> GetRect(u32 level = 0) const noexcept {
@@ -103,7 +103,7 @@ public:
     u32 height = 0;
     u32 stride = 0;
     u32 levels = 1;
-    u32 res_scale = 1;
+    float res_scale = 1.0f;
 
     bool is_tiled = false;
     TextureType texture_type = TextureType::Texture2D;

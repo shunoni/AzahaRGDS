@@ -17,6 +17,7 @@ enum class FloatSetting(
         Settings.SECTION_RENDERER,
         100f
     ),
+    RESOLUTION_FACTOR(SettingKeys.resolution_factor(), Settings.SECTION_RENDERER, 100f),
     BACKGROUND_RED(SettingKeys.bg_red(), Settings.SECTION_RENDERER, 0f),
     BACKGROUND_BLUE(SettingKeys.bg_blue(), Settings.SECTION_RENDERER, 0f),
     BACKGROUND_GREEN(SettingKeys.bg_green(), Settings.SECTION_RENDERER, 0f);

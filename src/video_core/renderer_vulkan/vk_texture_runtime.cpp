@@ -1097,7 +1097,7 @@ void Surface::Download(const VideoCore::BufferTextureCopy& download,
         });
 }
 
-void Surface::ScaleUp(u32 new_scale) {
+void Surface::ScaleUp(float new_scale) {
     if (res_scale == new_scale || new_scale == 1) {
         return;
     }

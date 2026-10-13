@@ -161,7 +161,7 @@ FramebufferLayout CustomFrameLayout(u32 width, u32 height, bool is_swapped,
  * @param res_scale resolution scale factor
  * @param is_portrait_mode defaults to false
  */
-FramebufferLayout FrameLayoutFromResolutionScale(u32 res_scale, bool is_secondary = false,
+FramebufferLayout FrameLayoutFromResolutionScale(float res_scale, bool is_secondary = false,
                                                  bool is_portrait_mode = false);
 
 /**

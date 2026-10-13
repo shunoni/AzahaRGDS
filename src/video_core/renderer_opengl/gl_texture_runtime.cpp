@@ -589,7 +589,7 @@ void Surface::Attach(GLenum target, u32 level, u32 layer, bool scaled) {
     }
 }
 
-void Surface::ScaleUp(u32 new_scale) {
+void Surface::ScaleUp(float new_scale) {
     const DebugScope scope(*runtime, Common::Vec4f{}, "Surface::ScaleUp (NewScale:{})", new_scale);
 
     if (res_scale == new_scale || new_scale == 1) {

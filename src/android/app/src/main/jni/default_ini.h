@@ -99,6 +99,7 @@ static const char* android_config_default_file_content = (BOOST_HANA_STRING(R"(
 
 # Whether to compile shaders on multiple worker threads (Vulkan only)
 # 0: Off, 1: On (default)
+# Optimized for low-power handhelds: this is enabled by default to reduce shader stutter.
 )") DECLARE_KEY(async_shader_compilation) BOOST_HANA_STRING(R"(
 
 # Whether to emit PICA fragment shader using SPIRV or GLSL (Vulkan only)
@@ -114,7 +115,7 @@ static const char* android_config_default_file_content = (BOOST_HANA_STRING(R"(
 )") DECLARE_KEY(use_hw_shader) BOOST_HANA_STRING(R"(
 
 # Whether to use accurate multiplication in hardware shaders
-# 0: Off (Default. Faster, but causes issues in some games) 1: On (Slower, but correct)
+# 0: Off (Faster, default on RGDS), 1: On (Slower, but correct)
 )") DECLARE_KEY(shaders_accurate_mul) BOOST_HANA_STRING(R"(
 
 # Whether to use the Just-In-Time (JIT) compiler for shader emulation
@@ -139,9 +140,8 @@ static const char* android_config_default_file_content = (BOOST_HANA_STRING(R"(
 # 0: Off, 1 (default. On)
 )") DECLARE_KEY(use_disk_shader_cache) BOOST_HANA_STRING(R"(
 
-# Resolution scale factor
-# 0: Auto (scales resolution to window size), 1: Native 3DS screen resolution, Otherwise a scale
-# factor for the 3DS resolution
+# Resolution scale factor as a percentage of the native 3DS screen resolution
+# 10-150: Render scale percentage, 75 (default for low-power RGDS handhelds)
 )") DECLARE_KEY(resolution_factor) BOOST_HANA_STRING(R"(
 
 # Use Integer Scaling when the layout allows
@@ -169,8 +169,9 @@ static const char* android_config_default_file_content = (BOOST_HANA_STRING(R"(
 # Opacity of second layer when using custom layout option (bottom screen unless swapped). Useful if positioning on top of the first layer.
 )") DECLARE_KEY(custom_second_layer_opacity) BOOST_HANA_STRING(R"(
 
-# Whether and how Stereoscopic 3D should be rendered
-# 0: Off, 1: Half Width Side by Side, 2 (default): Full Width Side by Side, 3: Anaglyph, 4: Interlaced, 5: Reverse Interlaced, 6: Cardboard VR
+# Whether and how stereoscopic 3D should be rendered.
+# This is separate from the emulated "New 3DS" capability flag.
+# 0: Off (default optimized for RGDS), 1: Half Width Side by Side, 2: Full Width Side by Side, 3: Anaglyph, 4: Interlaced, 5: Reverse Interlaced, 6: Cardboard VR
 # 0 is no longer supported in the interface, as using render_3d_which_display = 0 has the same effect, but supported here for backwards compatibility
 )") DECLARE_KEY(render_3d) BOOST_HANA_STRING(R"(
 

@@ -68,8 +68,8 @@ public:
                                bool flip_rect, const Pica::RasterizerRegs& regs,
                                Common::Rectangle<u32> surfaces_rect)
         : res_cache{res_cache_}, fb{fb_} {
-        const u32 res_scale = fb->Scale();
-        const u32 height = surfaces_rect.GetHeight() / res_scale;
+        const float res_scale = fb->Scale();
+        const u32 height = static_cast<u32>(surfaces_rect.GetHeight() / res_scale);
 
         // Determine the draw rectangle (render area + scissor)
         Common::Rectangle viewport_rect = regs.GetViewportRect();

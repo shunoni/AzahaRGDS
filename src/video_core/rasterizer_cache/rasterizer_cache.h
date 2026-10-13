@@ -111,7 +111,7 @@ void RasterizerCache<T>::TickFrame() {
         UnregisterAll();
     }
 
-    const u32 scale_factor = renderer.GetResolutionScaleFactor();
+    const float scale_factor = renderer.GetResolutionScaleFactor();
     const bool resolution_scale_changed = resolution_scale_factor != scale_factor;
     const bool use_custom_texture_changed =
         Settings::values.custom_textures.GetValue() != use_custom_textures;
@@ -446,8 +446,8 @@ void RasterizerCache<T>::CopySurface(Surface& src_surface, Surface& dst_surface,
         return;
     }
 
-    const u32 src_scale = src_surface.res_scale;
-    const u32 dst_scale = dst_surface.res_scale;
+    const float src_scale = src_surface.res_scale;
+    const float dst_scale = dst_surface.res_scale;
     if (src_scale > dst_scale) {
         dst_surface.ScaleUp(src_scale);
     }
@@ -639,7 +639,7 @@ typename T::Surface& RasterizerCache<T>::GetTextureCube(const TextureCubeConfig&
         };
         info.SetDefaultStride();
 
-        u32 res_scale = 1;
+        float res_scale = 1.0f;
         for (u32 i = 0; i < addresses.size(); i++) {
             if (!addresses[i]) {
                 continue;
@@ -1204,7 +1204,7 @@ bool RasterizerCache<T>::ValidateByReinterpretation(Surface& surface, SurfacePar
         if (boost::icl::is_empty(copy_interval & interval)) {
             return false;
         }
-        const u32 res_scale = src_surface.res_scale;
+        const float res_scale = src_surface.res_scale;
         if (res_scale > surface.res_scale) {
             surface.ScaleUp(res_scale);
         }

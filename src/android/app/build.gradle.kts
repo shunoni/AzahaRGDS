@@ -60,10 +60,7 @@ android {
     }
 
     defaultConfig {
-        // The application ID refers to Lime3DS to allow for
-        // the Play Store listing, which was originally set up for Lime3DS, to still be used.
-        // applicationId = "org.azahar_emu.azahar"
-        applicationId = "io.github.lime3ds.android"
+        applicationId = "com.azahargds.android"
 
         minSdk = 28
         targetSdk = 35
@@ -80,10 +77,12 @@ android {
                 arguments(
                     "-DENABLE_QT=0", // Don't use QT
                     "-DENABLE_SDL2=0", // Don't use SDL
+                    "-DENABLE_TESTS=OFF", // Android app builds do not need the native test suite
                     "-DANDROID_ARM_NEON=true", // cryptopp requires Neon to work
                     "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON", // Support Android 15 16KiB page
                     // sizes
-                    "-DENABLE_GDBSTUB=OFF" // Disable GDB stub
+                    "-DENABLE_GDBSTUB=OFF", // Disable GDB stub
+                    "-DCMAKE_CXX_FLAGS_RELWITHDEBINFO=-O1 -g0"
                 )
             }
         }

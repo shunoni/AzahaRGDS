@@ -386,7 +386,7 @@ FramebufferLayout CustomFrameLayout(u32 width, u32 height, bool is_swapped, bool
     }
 }
 
-FramebufferLayout FrameLayoutFromResolutionScale(u32 res_scale, bool is_secondary,
+FramebufferLayout FrameLayoutFromResolutionScale(float res_scale, bool is_secondary,
                                                  bool is_portrait) {
     u32 width, height, gap;
     gap = (int)(Settings::values.screen_gap.GetValue()) * res_scale;

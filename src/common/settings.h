@@ -530,12 +530,12 @@ struct Values {
     Setting<bool> dump_command_buffers{false, Keys::dump_command_buffers};
     SwitchableSetting<bool> spirv_shader_gen{true, Keys::spirv_shader_gen};
     SwitchableSetting<bool> disable_spirv_optimizer{true, Keys::disable_spirv_optimizer};
-    SwitchableSetting<bool> async_shader_compilation{false, Keys::async_shader_compilation};
+    SwitchableSetting<bool> async_shader_compilation{true, Keys::async_shader_compilation};
     SwitchableSetting<bool> async_presentation{true, Keys::async_presentation};
     SwitchableSetting<bool> use_hw_shader{true, Keys::use_hw_shader};
     SwitchableSetting<bool> use_disk_shader_cache{true, Keys::use_disk_shader_cache};
     SwitchableSetting<bool> use_skip_duplicate_frames{true, Keys::use_skip_duplicate_frames};
-    SwitchableSetting<bool> shaders_accurate_mul{true, Keys::shaders_accurate_mul};
+    SwitchableSetting<bool> shaders_accurate_mul{false, Keys::shaders_accurate_mul};
 #ifdef ANDROID // TODO: Fuck this -OS
     SwitchableSetting<bool> use_vsync{false, Keys::use_vsync};
 #else
@@ -544,7 +544,7 @@ struct Values {
     SwitchableSetting<bool> use_display_refresh_rate_detection{
         true, Keys::use_display_refresh_rate_detection};
     Setting<bool> use_shader_jit{true, Keys::use_shader_jit};
-    SwitchableSetting<u32, true> resolution_factor{1, 0, 10, Keys::resolution_factor};
+    SwitchableSetting<float, true> resolution_factor{75.0f, 10.0f, 150.0f, Keys::resolution_factor};
     SwitchableSetting<bool> use_integer_scaling{false, Keys::use_integer_scaling};
     SwitchableSetting<double, true> frame_limit{100, 0, 1000, Keys::frame_limit};
     SwitchableSetting<double, true> turbo_limit{200, 0, 1000, Keys::turbo_limit};

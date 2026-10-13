@@ -791,7 +791,7 @@ void RendererVulkan::DrawSingleScreen(u32 screen_id, float x, float y, float w, 
     std::memcpy(data, vertices.data(), size);
     vertex_buffer.Commit(size);
 
-    const u32 scale_factor = GetResolutionScaleFactor();
+    const float scale_factor = GetResolutionScaleFactor();
     draw_info.i_resolution =
         Common::MakeVec(static_cast<f32>(screen_info.texture.width * scale_factor),
                         static_cast<f32>(screen_info.texture.height * scale_factor),
@@ -863,7 +863,7 @@ void RendererVulkan::DrawSingleScreenStereo(u32 screen_id_l, u32 screen_id_r, fl
     std::memcpy(data, vertices.data(), size);
     vertex_buffer.Commit(size);
 
-    const u32 scale_factor = GetResolutionScaleFactor();
+    const float scale_factor = GetResolutionScaleFactor();
     draw_info.i_resolution =
         Common::MakeVec(static_cast<f32>(screen_info_l.texture.width * scale_factor),
                         static_cast<f32>(screen_info_l.texture.height * scale_factor),

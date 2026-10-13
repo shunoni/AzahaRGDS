@@ -226,7 +226,7 @@ private:
     Common::SlotVector<Framebuffer> slot_framebuffers;
     SurfaceMap dirty_regions;
     PageMap cached_pages;
-    u32 resolution_scale_factor;
+    float resolution_scale_factor;
     u64 frame_tick{};
     FramebufferParams fb_params;
     Settings::TextureFilter filter;

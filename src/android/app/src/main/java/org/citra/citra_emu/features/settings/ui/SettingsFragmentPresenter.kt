@@ -987,14 +987,15 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                 )
             )
             add(
-                SingleChoiceSetting(
-                    IntSetting.RESOLUTION_FACTOR,
+                SliderSetting(
+                    FloatSetting.RESOLUTION_FACTOR,
                     R.string.internal_resolution,
                     R.string.internal_resolution_description,
-                    R.array.resolutionFactorNames,
-                    R.array.resolutionFactorValues,
-                    IntSetting.RESOLUTION_FACTOR.key,
-                    IntSetting.RESOLUTION_FACTOR.defaultValue
+                    10,
+                    150,
+                    "%",
+                    FloatSetting.RESOLUTION_FACTOR.key,
+                    FloatSetting.RESOLUTION_FACTOR.defaultValue
                 )
             )
             add(

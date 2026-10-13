@@ -714,7 +714,7 @@ void GRenderWindow::ReleaseRenderTarget() {
     main_context.reset();
 }
 
-void GRenderWindow::CaptureScreenshot(u32 res_scale, const QString& screenshot_path) {
+void GRenderWindow::CaptureScreenshot(float res_scale, const QString& screenshot_path) {
     auto& renderer = system.GPU().Renderer();
     if (res_scale == 0) {
         res_scale = renderer.GetResolutionScaleFactor();
