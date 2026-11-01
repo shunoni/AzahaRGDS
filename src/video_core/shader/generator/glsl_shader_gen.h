@@ -4,20 +4,13 @@
 
 #pragma once
 
-// High precision may or may not be supported in GLES3. If it isn't, use medium precision instead.
+// AGY OPTIMIZATION: Use mediump precision on GLES to utilize Mali Bifrost FP16 dual ALUs (2x throughput)
 static constexpr char fragment_shader_precision_OES[] = R"(
 #if GL_ES
-#ifdef GL_FRAGMENT_PRECISION_HIGH
-precision highp int;
-precision highp float;
-precision highp samplerBuffer;
-precision highp uimage2D;
-#else
 precision mediump int;
 precision mediump float;
 precision mediump samplerBuffer;
 precision mediump uimage2D;
-#endif // GL_FRAGMENT_PRECISION_HIGH
 #endif
 )";
 

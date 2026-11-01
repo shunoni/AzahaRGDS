@@ -83,7 +83,11 @@ android {
                     "-DANDROID_ARM_NEON=true", // cryptopp requires Neon to work
                     "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON", // Support Android 15 16KiB page
                     // sizes
-                    "-DENABLE_GDBSTUB=OFF" // Disable GDB stub
+                    "-DENABLE_GDBSTUB=OFF", // Disable GDB stub
+                    "-DENABLE_LTO=ON",
+                    "-DCMAKE_BUILD_TYPE=Release",
+                    "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -mcpu=cortex-a55 -mtune=cortex-a55 -fomit-frame-pointer -ffast-math -fno-stack-protector",
+                    "-DCMAKE_C_FLAGS_RELEASE=-O3 -mcpu=cortex-a55 -mtune=cortex-a55 -fomit-frame-pointer -ffast-math -fno-stack-protector"
                 )
             }
         }

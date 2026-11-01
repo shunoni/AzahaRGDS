@@ -370,6 +370,16 @@ std::unique_ptr<Dynarmic::A32::Jit> ARM_Dynarmic::MakeJit() {
     config.processor_id = GetID();
     config.global_monitor = &exclusive_monitor.monitor;
 
+    // AGY SPEED OPTIMIZATION: Enable aggressive unsafe optimizations for low-power ARM64
+    config.unsafe_optimizations = true;
+    config.optimizations = config.optimizations |
+                           Dynarmic::OptimizationFlag::Unsafe_ReducedErrorFP |
+                           Dynarmic::OptimizationFlag::Unsafe_InaccurateNaN |
+                           Dynarmic::OptimizationFlag::Unsafe_IgnoreStandardFPCRValue |
+                           Dynarmic::OptimizationFlag::Unsafe_IgnoreGlobalMonitor;
+    config.wall_clock_cntpct = true;
+    config.check_halt_on_memory_access = false;
+
     return std::make_unique<Dynarmic::A32::Jit>(config);
 }
 
