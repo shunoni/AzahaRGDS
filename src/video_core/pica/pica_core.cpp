@@ -1083,6 +1083,13 @@ void PicaCore::DrawArrays(bool is_indexed) {
         return;
     }
 
+    // MMJ Optimization (Skip Slow Draw):
+    // If accelerated draw was requested but failed, skip slow CPU software vertex fallback
+    // rather than bottlenecking weak Cortex-A55 cores.
+    if (accelerate_draw) {
+        return;
+    }
+
     // We cannot accelerate the draw, so load and execute the vertex shader for each vertex.
     LoadVertices(is_indexed);
 
