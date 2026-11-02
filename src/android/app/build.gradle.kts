@@ -20,7 +20,9 @@ plugins {
  * next 680 years.
  */
 val autoVersion = (((System.currentTimeMillis() / 1000) - 1451606400) / 10).toInt()
-val abiFilter = listOf("arm64-v8a", "x86_64")
+// Build only for the 64-bit ARM target used by the RG DS. The Cortex-A55 compiler
+// flags below are not valid for the x86_64 emulator ABI.
+val abiFilter = listOf("arm64-v8a")
 
 val downloadedJniLibsPath = "${layout.buildDirectory.get().asFile.path}/downloadedJniLibs"
 
