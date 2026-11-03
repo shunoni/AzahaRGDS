@@ -122,6 +122,7 @@ foreach(KEY IN ITEMS
     "log_regex_filter"
     "toggle_unique_data_console_type"
     "enable_exception_handler"
+    "mii_compatibility_fixes"
     "use_integer_scaling"
     "layouts_to_cycle"
     "camera_inner_flip"

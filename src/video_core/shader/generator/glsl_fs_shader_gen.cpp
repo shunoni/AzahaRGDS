@@ -3,6 +3,7 @@
 // Refer to the misc/licenses/gplv2.txt file included.
 
 #include "video_core/shader/generator/glsl_fs_shader_gen.h"
+#include "common/settings.h"
 
 namespace Pica::Shader::Generator::GLSL {
 
@@ -43,6 +44,22 @@ precision mediump int;
 precision mediump float;
 precision mediump samplerBuffer;
 precision mediump uimage2D;
+#endif
+)";
+
+static constexpr char fragment_shader_precision_OES_mii_compat[] = R"(
+#if GL_ES
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp int;
+precision highp float;
+precision highp samplerBuffer;
+precision highp uimage2D;
+#else
+precision mediump int;
+precision mediump float;
+precision mediump samplerBuffer;
+precision mediump uimage2D;
+#endif // GL_FRAGMENT_PRECISION_HIGH
 #endif
 )";
 
@@ -1253,7 +1270,9 @@ void FragmentModule::DefineExtensions() {
     }
 
     if (!profile.is_vulkan) {
-        out += fragment_shader_precision_OES;
+        out += Settings::values.mii_compatibility_fixes.GetValue()
+                   ? fragment_shader_precision_OES_mii_compat
+                   : fragment_shader_precision_OES;
     }
 }
 

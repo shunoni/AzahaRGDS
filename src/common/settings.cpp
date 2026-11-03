@@ -173,6 +173,7 @@ void LogSettings() {
     log_setting("Debugging_ToggleUniqueDataConsoleType",
                 values.toggle_unique_data_console_type.GetValue());
     log_setting("Debugging_EnableExceptionHandler", values.enable_exception_handler.GetValue());
+    log_setting("Debugging_MiiCompatibilityFixes", values.mii_compatibility_fixes.GetValue());
 }
 
 bool IsConfiguringGlobal() {

@@ -1978,6 +1978,15 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
             )
             add(
                 SwitchSetting(
+                    BooleanSetting.MII_COMPATIBILITY_FIXES,
+                    R.string.mii_compatibility_fixes,
+                    R.string.mii_compatibility_fixes_description,
+                    BooleanSetting.MII_COMPATIBILITY_FIXES.key,
+                    BooleanSetting.MII_COMPATIBILITY_FIXES.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
                     BooleanSetting.ENABLE_RPC_SERVER,
                     R.string.enable_rpc_server,
                     R.string.enable_rpc_server_desc,

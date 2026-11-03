@@ -322,6 +322,7 @@ void Config::ReadValues() {
     ReadSetting("Debugging", Settings::values.enable_rpc_server);
     ReadSetting("Debugging", Settings::values.toggle_unique_data_console_type);
     ReadSetting("Debugging", Settings::values.enable_exception_handler);
+    ReadSetting("Debugging", Settings::values.mii_compatibility_fixes);
 
     for (const auto& service_module : Service::service_module_map) {
         bool use_lle =
