@@ -244,12 +244,9 @@ void FrameLimiter::DoFrameLimiting(microseconds current_system_time_us) {
         return;
     }
 
-    // Keep both lead and lag, but bound them so a single hitch cannot produce a long catch-up
-    // burst or stall the limiter forever. The negative (lag) side is required to preserve the
-    // average speed when frame costs vary, which is exactly what happens with frame skipping:
-    // render-heavy frames build up lag and the following light/skipped frames repay it. Dropping
-    // that lag makes the emulator run slower than the configured limit, while unbounded lag would
-    // make it run too fast for too long after a hitch.
+    // Max lag caused by slow frames. Shouldn't be more than the length of a frame at the current
+    // speed percent or it will clamp too much and prevent this from properly limiting to that
+    // percent. High values means it'll take longer after a slow frame to recover and start limiting
     const microseconds max_lag_time_us = duration_cast<microseconds>(
         std::chrono::duration<double, std::chrono::microseconds::period>(25ms / sleep_scale));
     frame_limiting_delta_err += duration_cast<microseconds>(
@@ -266,8 +263,6 @@ void FrameLimiter::DoFrameLimiting(microseconds current_system_time_us) {
             std::this_thread::sleep_for(frame_limiting_delta_err);
         }
         auto now_after_sleep = Clock::now();
-        // Subtract the real wait so oversleeping becomes credit for the next frame instead of a
-        // permanent slowdown.
         frame_limiting_delta_err -= duration_cast<microseconds>(now_after_sleep - now);
         now = now_after_sleep;
     }
