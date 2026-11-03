@@ -244,9 +244,10 @@ void FrameLimiter::DoFrameLimiting(microseconds current_system_time_us) {
         return;
     }
 
-    // Max lag caused by slow frames. Shouldn't be more than the length of a frame at the current
-    // speed percent or it will clamp too much and prevent this from properly limiting to that
-    // percent. High values means it'll take longer after a slow frame to recover and start limiting
+    // Cap accumulated lead to one frame so occasional early wakeups do not produce long waits.
+    // Drop accumulated lag: repaying it would make later frames run faster than the configured
+    // limit, which is especially noticeable when frame skipping alternates render-heavy and light
+    // frames.
     const microseconds max_lag_time_us = duration_cast<microseconds>(
         std::chrono::duration<double, std::chrono::microseconds::period>(25ms / sleep_scale));
     frame_limiting_delta_err += duration_cast<microseconds>(
@@ -254,7 +255,7 @@ void FrameLimiter::DoFrameLimiting(microseconds current_system_time_us) {
             (current_system_time_us - previous_system_time_us) / sleep_scale));
     frame_limiting_delta_err -= duration_cast<microseconds>(now - previous_walltime);
     frame_limiting_delta_err =
-        std::clamp(frame_limiting_delta_err, -max_lag_time_us, max_lag_time_us);
+        std::clamp(frame_limiting_delta_err, microseconds::zero(), max_lag_time_us);
 
     if (frame_limiting_delta_err > microseconds::zero()) {
         if (wait_callback) {
@@ -264,6 +265,7 @@ void FrameLimiter::DoFrameLimiting(microseconds current_system_time_us) {
         }
         auto now_after_sleep = Clock::now();
         frame_limiting_delta_err -= duration_cast<microseconds>(now_after_sleep - now);
+        frame_limiting_delta_err = std::max(frame_limiting_delta_err, microseconds::zero());
         now = now_after_sleep;
     }
 

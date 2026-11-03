@@ -504,9 +504,7 @@ void GPU::VBlankCallback(std::uintptr_t user_data, s64 cycles_late) {
     if (impl->frame_skip_counter == 0) {
         impl->renderer->SwapBuffers();
     } else {
-        impl->system.perf_stats->StartSwap();
         impl->renderer->OnSkippedFrame();
-        impl->system.perf_stats->EndSwap();
     }
     impl->frame_skip_counter = (impl->frame_skip_counter + 1) % (frame_skip_mode + 1);
 
