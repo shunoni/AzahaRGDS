@@ -244,10 +244,12 @@ void FrameLimiter::DoFrameLimiting(microseconds current_system_time_us) {
         return;
     }
 
-    // Cap accumulated lead to one frame so occasional early wakeups do not produce long waits.
-    // Drop accumulated lag: repaying it would make later frames run faster than the configured
-    // limit, which is especially noticeable when frame skipping alternates render-heavy and light
-    // frames.
+    // Keep both lead and lag, but bound them so a single hitch cannot produce a long catch-up
+    // burst or stall the limiter forever. The negative (lag) side is required to preserve the
+    // average speed when frame costs vary, which is exactly what happens with frame skipping:
+    // render-heavy frames build up lag and the following light/skipped frames repay it. Dropping
+    // that lag makes the emulator run slower than the configured limit, while unbounded lag would
+    // make it run too fast for too long after a hitch.
     const microseconds max_lag_time_us = duration_cast<microseconds>(
         std::chrono::duration<double, std::chrono::microseconds::period>(25ms / sleep_scale));
     frame_limiting_delta_err += duration_cast<microseconds>(
@@ -255,7 +257,7 @@ void FrameLimiter::DoFrameLimiting(microseconds current_system_time_us) {
             (current_system_time_us - previous_system_time_us) / sleep_scale));
     frame_limiting_delta_err -= duration_cast<microseconds>(now - previous_walltime);
     frame_limiting_delta_err =
-        std::clamp(frame_limiting_delta_err, microseconds::zero(), max_lag_time_us);
+        std::clamp(frame_limiting_delta_err, -max_lag_time_us, max_lag_time_us);
 
     if (frame_limiting_delta_err > microseconds::zero()) {
         if (wait_callback) {
@@ -264,8 +266,9 @@ void FrameLimiter::DoFrameLimiting(microseconds current_system_time_us) {
             std::this_thread::sleep_for(frame_limiting_delta_err);
         }
         auto now_after_sleep = Clock::now();
+        // Subtract the real wait so oversleeping becomes credit for the next frame instead of a
+        // permanent slowdown.
         frame_limiting_delta_err -= duration_cast<microseconds>(now_after_sleep - now);
-        frame_limiting_delta_err = std::max(frame_limiting_delta_err, microseconds::zero());
         now = now_after_sleep;
     }
 
