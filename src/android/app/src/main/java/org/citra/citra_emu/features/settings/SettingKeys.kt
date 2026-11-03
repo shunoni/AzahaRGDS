@@ -107,6 +107,7 @@ object SettingKeys {
     external fun gdbstub_port(): String
     external fun instant_debug_log(): String
     external fun mii_compatibility_fixes(): String
+    external fun use_per_game_settings(): String
     external fun enable_rpc_server(): String
     external fun toggle_unique_data_console_type(): String
     external fun log_filter(): String

@@ -123,6 +123,7 @@ foreach(KEY IN ITEMS
     "toggle_unique_data_console_type"
     "enable_exception_handler"
     "mii_compatibility_fixes"
+    "use_per_game_settings"
     "use_integer_scaling"
     "layouts_to_cycle"
     "camera_inner_flip"

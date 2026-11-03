@@ -75,7 +75,6 @@ import org.citra.citra_emu.display.SecondaryDisplayLayout
 import org.citra.citra_emu.features.hotkeys.Hotkey
 import org.citra.citra_emu.features.settings.model.BooleanSetting
 import org.citra.citra_emu.features.settings.model.IntSetting
-import org.citra.citra_emu.features.settings.model.SettingsViewModel
 import org.citra.citra_emu.features.settings.ui.SettingsActivity
 import org.citra.citra_emu.features.settings.utils.SettingsFile
 import org.citra.citra_emu.model.Game
@@ -116,9 +115,6 @@ class EmulationFragment :
     private lateinit var screenAdjustmentUtil: ScreenAdjustmentUtil
 
     private val emulationViewModel: EmulationViewModel by activityViewModels()
-    private val settingsViewModel: SettingsViewModel by viewModels()
-    private val settings get() = settingsViewModel.settings
-
     private val onPause = Runnable { togglePause() }
     private val onShutdown = Runnable { emulationState.stop() }
 
@@ -208,7 +204,7 @@ class EmulationFragment :
         retainInstance = true
         emulationState = EmulationState(game.path)
         screenAdjustmentUtil =
-            ScreenAdjustmentUtil(requireContext(), requireActivity().windowManager, settings)
+            ScreenAdjustmentUtil(requireContext(), requireActivity().windowManager)
         EmulationLifecycleUtil.addPauseResumeHook(onPause)
         EmulationLifecycleUtil.addShutdownHook(onShutdown)
     }
@@ -411,10 +407,11 @@ class EmulationFragment :
                 }
 
                 R.id.menu_settings -> {
+                    val gameId = String.format("%016X", NativeLibrary.getRunningTitleId())
                     SettingsActivity.launch(
                         requireContext(),
                         SettingsFile.FILE_NAME_CONFIG,
-                        ""
+                        gameId
                     )
 
                     true
@@ -768,10 +765,7 @@ class EmulationFragment :
                 R.id.menu_performance_overlay_show -> {
                     BooleanSetting.PERF_OVERLAY_ENABLE.boolean =
                         !BooleanSetting.PERF_OVERLAY_ENABLE.boolean
-                    settings.saveSetting(
-                        BooleanSetting.PERF_OVERLAY_ENABLE,
-                        SettingsFile.FILE_NAME_CONFIG
-                    )
+                    SettingsFile.saveCurrentGameSetting(BooleanSetting.PERF_OVERLAY_ENABLE)
                     updateShowPerformanceOverlay()
                     true
                 }

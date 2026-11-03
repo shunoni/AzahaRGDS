@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <string>
+#include "common/common_types.h"
 #include "common/settings.h"
 
 class INIReader;
@@ -14,12 +15,13 @@ class Config {
 private:
     std::unique_ptr<INIReader> android_config;
     std::string android_config_loc;
+    u64 program_id{};
 
     bool LoadINI(const std::string& default_contents = "", bool retry = true);
     void ReadValues();
 
 public:
-    Config();
+    explicit Config(u64 program_id = 0);
     ~Config();
 
     void Reload();

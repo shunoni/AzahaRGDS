@@ -658,6 +658,7 @@ struct Values {
     Setting<bool> toggle_unique_data_console_type{false, Keys::toggle_unique_data_console_type};
     Setting<bool> enable_exception_handler{false, Keys::enable_exception_handler};
     Setting<bool> mii_compatibility_fixes{false, Keys::mii_compatibility_fixes};
+    Setting<bool> use_per_game_settings{false, Keys::use_per_game_settings};
 
     // WebService
     Setting<std::string> web_api_url{"http://88.198.47.46:5000", Keys::web_api_url};

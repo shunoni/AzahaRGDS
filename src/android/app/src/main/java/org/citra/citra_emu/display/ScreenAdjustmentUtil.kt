@@ -13,14 +13,12 @@ import org.citra.citra_emu.R
 import org.citra.citra_emu.features.settings.model.BooleanSetting
 import org.citra.citra_emu.features.settings.model.IntListSetting
 import org.citra.citra_emu.features.settings.model.IntSetting
-import org.citra.citra_emu.features.settings.model.Settings
 import org.citra.citra_emu.features.settings.utils.SettingsFile
 import org.citra.citra_emu.utils.EmulationMenuSettings
 
 class ScreenAdjustmentUtil(
     private val context: Context,
-    private val windowManager: WindowManager,
-    private val settings: Settings
+    private val windowManager: WindowManager
 ) {
     fun swapScreen(save:Boolean) {
         val isEnabled = !EmulationMenuSettings.swapScreens
@@ -37,7 +35,7 @@ class ScreenAdjustmentUtil(
         )
         if(save) {
             BooleanSetting.SWAP_SCREEN.boolean = isEnabled
-            settings.saveSetting(BooleanSetting.SWAP_SCREEN, SettingsFile.FILE_NAME_CONFIG)
+            SettingsFile.saveCurrentGameSetting(BooleanSetting.SWAP_SCREEN)
         }
     }
 
@@ -68,47 +66,47 @@ class ScreenAdjustmentUtil(
 
     fun changePortraitOrientation(layoutOption: Int) {
         IntSetting.PORTRAIT_SCREEN_LAYOUT.int = layoutOption
-        settings.saveSetting(IntSetting.PORTRAIT_SCREEN_LAYOUT, SettingsFile.FILE_NAME_CONFIG)
+        SettingsFile.saveCurrentGameSetting(IntSetting.PORTRAIT_SCREEN_LAYOUT)
         NativeLibrary.reloadSettings()
         NativeLibrary.updateFramebuffer(NativeLibrary.isPortraitMode())
     }
 
     fun changeScreenOrientation(layoutOption: Int) {
         IntSetting.SCREEN_LAYOUT.int = layoutOption
-        settings.saveSetting(IntSetting.SCREEN_LAYOUT, SettingsFile.FILE_NAME_CONFIG)
+        SettingsFile.saveCurrentGameSetting(IntSetting.SCREEN_LAYOUT)
         NativeLibrary.reloadSettings()
         NativeLibrary.updateFramebuffer(NativeLibrary.isPortraitMode())
     }
 
     fun changeSecondaryOrientation(layoutOption: Int) {
         IntSetting.SECONDARY_DISPLAY_LAYOUT.int = layoutOption
-        settings.saveSetting(IntSetting.SECONDARY_DISPLAY_LAYOUT, SettingsFile.FILE_NAME_CONFIG)
+        SettingsFile.saveCurrentGameSetting(IntSetting.SECONDARY_DISPLAY_LAYOUT)
         NativeLibrary.reloadSettings()
         NativeLibrary.updateFramebuffer(NativeLibrary.isPortraitMode())
     }
 
     fun enableSecondaryDisplay(layoutOption: Int) {
         BooleanSetting.ENABLE_SECONDARY_DISPLAY.boolean = true
-        settings.saveSetting(BooleanSetting.ENABLE_SECONDARY_DISPLAY, SettingsFile.FILE_NAME_CONFIG)
+        SettingsFile.saveCurrentGameSetting(BooleanSetting.ENABLE_SECONDARY_DISPLAY)
         changeSecondaryOrientation(layoutOption)
     }
 
     fun disableSecondaryDisplay() {
         BooleanSetting.ENABLE_SECONDARY_DISPLAY.boolean = false
-        settings.saveSetting(BooleanSetting.ENABLE_SECONDARY_DISPLAY, SettingsFile.FILE_NAME_CONFIG)
+        SettingsFile.saveCurrentGameSetting(BooleanSetting.ENABLE_SECONDARY_DISPLAY)
     }
 
     fun changeActivityOrientation(orientationOption: Int) {
         val activity = context as? Activity ?: return
         IntSetting.ORIENTATION_OPTION.int = orientationOption
-        settings.saveSetting(IntSetting.ORIENTATION_OPTION, SettingsFile.FILE_NAME_CONFIG)
+        SettingsFile.saveCurrentGameSetting(IntSetting.ORIENTATION_OPTION)
         activity.requestedOrientation = orientationOption
     }
 
     fun toggleScreenUpright() {
         val uprightBoolean = BooleanSetting.UPRIGHT_SCREEN.boolean
         BooleanSetting.UPRIGHT_SCREEN.boolean = !uprightBoolean
-        settings.saveSetting(BooleanSetting.UPRIGHT_SCREEN, SettingsFile.FILE_NAME_CONFIG)
+        SettingsFile.saveCurrentGameSetting(BooleanSetting.UPRIGHT_SCREEN)
         NativeLibrary.reloadSettings()
         NativeLibrary.updateFramebuffer(NativeLibrary.isPortraitMode())
     }

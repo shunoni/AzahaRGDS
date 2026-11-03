@@ -125,7 +125,7 @@ class EmulationActivity : AppCompatActivity() {
 
         settingsViewModel.settings.loadSettings()
 
-        screenAdjustmentUtil = ScreenAdjustmentUtil(this, windowManager, settingsViewModel.settings)
+        screenAdjustmentUtil = ScreenAdjustmentUtil(this, windowManager)
 
         // Block orientation until emulation is ready to prevent unneccesary
         // surface recreation until the renderer is ready.

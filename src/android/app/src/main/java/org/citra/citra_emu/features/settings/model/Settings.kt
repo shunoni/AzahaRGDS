@@ -40,8 +40,15 @@ class Settings {
 
     fun loadSettings(view: SettingsActivityView? = null) {
         sections = SettingsSectionMap()
+        // Clear values left by a previous game's overrides before loading the global baseline.
+        BooleanSetting.clear()
+        FloatSetting.clear()
+        ScaledFloatSetting.clear()
+        IntSetting.clear()
+        IntListSetting.clear()
+        StringSetting.clear()
         loadCitraSettings(view)
-        if (!TextUtils.isEmpty(gameId)) {
+        if (!TextUtils.isEmpty(gameId) && BooleanSetting.USE_PER_GAME_SETTINGS.boolean) {
             loadCustomGameSettings(gameId!!, view)
         }
         isLoaded = true
@@ -88,12 +95,43 @@ class Settings {
                 SettingsFile.saveFile(fileName, iniSections, view)
             }
         } else {
-            // TODO: Implement per game settings
+            if (BooleanSetting.USE_PER_GAME_SETTINGS.boolean) {
+                val gameSections = TreeMap<String, SettingSection?>()
+                for (sectionName in configFileSectionsMap[SettingsFile.FILE_NAME_CONFIG].orEmpty()) {
+                    val original = sections[sectionName] ?: continue
+                    val gameSection = SettingSection(sectionName)
+                    for (setting in original.settings.values) {
+                        // This mode switch always belongs to the global configuration.
+                        if (setting.key != BooleanSetting.USE_PER_GAME_SETTINGS.key) {
+                            gameSection.putSetting(setting)
+                        }
+                    }
+                    gameSections[sectionName] = gameSection
+                }
+                SettingsFile.saveCustomGameSettings(gameId!!, gameSections, view)
+            } else {
+                saveGlobalSettings(view)
+            }
+        }
+    }
+
+    private fun saveGlobalSettings(view: SettingsActivityView) {
+        view.showToastMessage(CitraApplication.appContext.getString(R.string.ini_saved), false)
+        for ((fileName, sectionNames) in configFileSectionsMap.entries) {
+            val iniSections = TreeMap<String, SettingSection?>()
+            for (section in sectionNames) {
+                iniSections[section] = sections[section]
+            }
+            SettingsFile.saveFile(fileName, iniSections, view)
         }
     }
 
     fun saveSetting(setting: AbstractSetting, filename: String) {
-        SettingsFile.saveFile(filename, setting)
+        if (!TextUtils.isEmpty(gameId) && BooleanSetting.USE_PER_GAME_SETTINGS.boolean) {
+            SettingsFile.saveCustomGameSetting(gameId!!, setting)
+        } else {
+            SettingsFile.saveFile(filename, setting)
+        }
     }
 
     companion object {

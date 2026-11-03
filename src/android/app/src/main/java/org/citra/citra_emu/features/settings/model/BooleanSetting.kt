@@ -20,6 +20,7 @@ enum class BooleanSetting(
     SWAP_SCREEN(SettingKeys.swap_screen(), Settings.SECTION_LAYOUT, false),
     INSTANT_DEBUG_LOG(SettingKeys.instant_debug_log(), Settings.SECTION_DEBUG, false),
     MII_COMPATIBILITY_FIXES(SettingKeys.mii_compatibility_fixes(), Settings.SECTION_DEBUG, false),
+    USE_PER_GAME_SETTINGS(SettingKeys.use_per_game_settings(), Settings.SECTION_DEBUG, false),
     ENABLE_RPC_SERVER(SettingKeys.enable_rpc_server(), Settings.SECTION_DEBUG, false),
     TOGGLE_UNIQUE_DATA_CONSOLE_TYPE(
         SettingKeys.toggle_unique_data_console_type(),

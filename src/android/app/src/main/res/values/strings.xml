@@ -409,6 +409,8 @@
     <string name="instant_debug_log_description">Immediately commits the debug log to file. Use this if Azahar crashes and the log output is being cut.</string>
     <string name="mii_compatibility_fixes">Mii Compatibility Fixes</string>
     <string name="mii_compatibility_fixes_description">Restores full shader precision and texture synchronization to address Mii face artifacts or editor crashes. This can reduce performance in Mii-heavy games. Restart Azahar after changing this setting.</string>
+    <string name="use_per_game_settings">Per-Game Settings</string>
+    <string name="use_per_game_settings_description">When enabled, settings changed from a running game are saved for that game. When disabled, games use and update the global settings. Existing per-game files are kept, but ignored while this is off.</string>
     <string name="delay_start_lle_modules">Delay Start With LLE Modules</string>
     <string name="delay_start_lle_modules_description">Delays the start of the app when LLE modules are enabled.</string>
     <string name="deterministic_async_operations">Deterministic Async Operations</string>
