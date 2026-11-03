@@ -288,9 +288,13 @@ object SettingsFile {
 
     private fun getCustomGameSettingsFile(gameId: String, create: Boolean): DocumentFile? {
         val root = DocumentFile.fromTreeUri(CitraApplication.appContext, Uri.parse(userDirectory))
-        val directory = root?.findFile("GameSettings")
-            ?: if (create) root?.createDirectory("GameSettings") else null
             ?: return null
+        val directory = root.findFile("GameSettings") ?: run {
+            if (!create) {
+                return null
+            }
+            root.createDirectory("GameSettings") ?: return null
+        }
         return directory.findFile("$gameId.ini")
             ?: if (create) directory.createFile("text/plain", "$gameId.ini") else null
     }
