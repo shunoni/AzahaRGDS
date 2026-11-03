@@ -140,6 +140,10 @@ static const char* android_config_default_file_content = (BOOST_HANA_STRING(R"(
 # 0: Off, 1 (default): On
 )") DECLARE_KEY(use_skip_duplicate_frames) BOOST_HANA_STRING(R"(
 
+# Draw every emulated frame or skip only rendering/presentation for selected frames
+# 0 (default): Normal, 1: Draw every other frame, 2: Draw one frame in three
+)") DECLARE_KEY(frame_skip_mode) BOOST_HANA_STRING(R"(
+
 # Reduce stuttering by storing and loading generated shaders to disk
 # 0: Off, 1 (default. On)
 )") DECLARE_KEY(use_disk_shader_cache) BOOST_HANA_STRING(R"(

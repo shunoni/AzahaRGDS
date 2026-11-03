@@ -1183,6 +1183,13 @@ void RendererVulkan::SwapBuffers() {
     EndFrame();
 }
 
+void RendererVulkan::OnSkippedFrame() {
+    if (secondary_window) {
+        secondary_window->PollEvents();
+    }
+    EndFrame();
+}
+
 void RendererVulkan::RenderScreenshot() {
     if (!settings.screenshot_requested.exchange(false)) {
         return;

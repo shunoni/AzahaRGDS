@@ -50,7 +50,8 @@ public:
     }
 
     void SwapBuffers() override;
-    void TryPresent(int timeout_ms, bool is_secondary) override;
+    void OnSkippedFrame() override;
+    bool TryPresent(int timeout_ms, bool is_secondary) override;
     void PrepareVideoDumping() override;
     void CleanupVideoDumping() override;
 

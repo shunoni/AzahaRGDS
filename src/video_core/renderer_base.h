@@ -47,11 +47,17 @@ public:
     /// Finalize rendering the guest frame and draw into the presentation texture
     virtual void SwapBuffers() = 0;
 
+    /// Preserve frame timing and renderer housekeeping when drawing is skipped.
+    virtual void OnSkippedFrame() {
+        EndFrame();
+    }
+
     /// Draws the latest frame to the window waiting timeout_ms for a frame to arrive (Renderer
     /// specific implementation)
-    virtual void TryPresent(int timeout_ms, bool is_secondary) = 0;
-    virtual void TryPresent(int timeout_ms) {
-        TryPresent(timeout_ms, false);
+    /// Returns true only when a new image was drawn to the window.
+    virtual bool TryPresent(int timeout_ms, bool is_secondary) = 0;
+    virtual bool TryPresent(int timeout_ms) {
+        return TryPresent(timeout_ms, false);
     }
 
     /// Prepares for video dumping (e.g. create necessary buffers, etc)

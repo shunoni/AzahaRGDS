@@ -1199,6 +1199,17 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
             add(HeaderSetting(R.string.advanced))
             add(
                 SingleChoiceSetting(
+                    IntSetting.FRAME_SKIP_MODE,
+                    R.string.frame_skip_mode,
+                    R.string.frame_skip_mode_description,
+                    R.array.frameSkipModeNames,
+                    R.array.frameSkipModeValues,
+                    IntSetting.FRAME_SKIP_MODE.key,
+                    IntSetting.FRAME_SKIP_MODE.defaultValue
+                )
+            )
+            add(
+                SingleChoiceSetting(
                     IntSetting.TEXTURE_SAMPLING,
                     R.string.texture_sampling_name,
                     R.string.texture_sampling_description,

@@ -298,9 +298,10 @@ public:
         }
         context->MakeCurrent();
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-        system.GPU().Renderer().TryPresent(100, is_secondary);
-        context->SwapBuffers();
-        glFinish();
+        if (system.GPU().Renderer().TryPresent(100, is_secondary)) {
+            context->SwapBuffers();
+            glFinish();
+        }
     }
 
     void paintEvent(QPaintEvent* event) override {

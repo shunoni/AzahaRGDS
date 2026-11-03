@@ -490,8 +490,25 @@ void GPU::VBlankCallback(std::uintptr_t user_data, s64 cycles_late) {
     impl->signal_interrupt(Service::GSP::InterruptId::PDC0, 0);
     impl->signal_interrupt(Service::GSP::InterruptId::PDC1, 0);
 
-    // Present renderered frame.
-    impl->renderer->SwapBuffers();
+    // Skip only frame composition/presentation. Guest timing, GPU events, input and audio
+    // continue to run at the normal rate.
+    u32 frame_skip_mode = Settings::values.frame_skip_mode.GetValue();
+    if (frame_skip_mode > 2) {
+        frame_skip_mode = 2;
+    }
+    if (frame_skip_mode != impl->frame_skip_mode) {
+        impl->frame_skip_mode = frame_skip_mode;
+        impl->frame_skip_counter = 0;
+    }
+
+    if (impl->frame_skip_counter == 0) {
+        impl->renderer->SwapBuffers();
+    } else {
+        impl->system.perf_stats->StartSwap();
+        impl->renderer->OnSkippedFrame();
+        impl->system.perf_stats->EndSwap();
+    }
+    impl->frame_skip_counter = (impl->frame_skip_counter + 1) % (frame_skip_mode + 1);
 
     // Reschedule recurrent event
     impl->timing.ScheduleEvent(FRAME_TICKS - cycles_late, impl->vblank_event);

@@ -544,6 +544,7 @@ struct Values {
 #endif
     SwitchableSetting<bool> use_display_refresh_rate_detection{
         true, Keys::use_display_refresh_rate_detection};
+    SwitchableSetting<u32, true> frame_skip_mode{0, 0, 2, Keys::frame_skip_mode};
     Setting<bool> use_shader_jit{true, Keys::use_shader_jit};
     SwitchableSetting<u32, true> resolution_factor{1, 0, 18, Keys::resolution_factor};
     SwitchableSetting<bool> use_integer_scaling{false, Keys::use_integer_scaling};

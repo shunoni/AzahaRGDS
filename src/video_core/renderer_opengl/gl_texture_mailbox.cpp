@@ -116,8 +116,8 @@ Frontend::Frame* OGLTextureMailbox::TryGetPresentFrame(int timeout_ms) {
     present_cv.wait_for(lock, std::chrono::milliseconds(timeout_ms),
                         [&] { return !present_queue.empty(); });
     if (present_queue.empty()) {
-        // Timed out waiting for a frame to draw so return the previous frame
-        return previous_frame;
+        // No new image: leave the window's last posted buffer on screen.
+        return nullptr;
     }
 
     LoadPresentFrame();

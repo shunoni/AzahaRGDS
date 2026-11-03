@@ -81,7 +81,10 @@ public:
     void NotifySurfaceChanged(bool second) override;
 
     void SwapBuffers() override;
-    void TryPresent(int timeout_ms, bool is_secondary) override {}
+    void OnSkippedFrame() override;
+    bool TryPresent(int, bool) override {
+        return false;
+    }
 
 private:
     void ReloadPipeline(Settings::StereoRenderOption render_3d);

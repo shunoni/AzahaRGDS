@@ -225,6 +225,7 @@ void Config::ReadValues() {
     ReadSetting("Renderer", Settings::values.use_disk_shader_cache);
     ReadSetting("Renderer", Settings::values.use_vsync);
     ReadSetting("Renderer", Settings::values.use_skip_duplicate_frames);
+    ReadSetting("Renderer", Settings::values.frame_skip_mode);
     ReadSetting("Renderer", Settings::values.texture_filter);
     ReadSetting("Renderer", Settings::values.texture_sampling);
     ReadSetting("Renderer", Settings::values.turbo_limit);

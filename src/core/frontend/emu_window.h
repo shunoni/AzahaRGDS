@@ -62,9 +62,8 @@ public:
     virtual void ReleaseRenderFrame(Frame* frame) = 0;
 
     /**
-     * Presentation thread calls this to get the latest frame available to present. If there is no
-     * frame available after timeout, returns the previous frame. If there is no previous frame it
-     * returns nullptr
+     * Presentation thread calls this to get a newly rendered frame. If there is no new frame
+     * available after timeout, returns nullptr and leaves the currently displayed image alone.
      */
     virtual Frontend::Frame* TryGetPresentFrame(int timeout_ms) = 0;
 };
