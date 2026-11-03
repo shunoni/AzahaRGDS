@@ -152,20 +152,24 @@ object SettingsFile {
         }
     }
 
-    fun saveCustomGameSetting(gameId: String, setting: AbstractSetting) {
-        val ini = getCustomGameSettingsFile(gameId, true) ?: return
+    fun saveCustomGameSetting(gameId: String, setting: AbstractSetting): Boolean {
+        val ini = getCustomGameSettingsFile(gameId, true) ?: return false
         try {
             val context: Context = CitraApplication.appContext
             val inputStream = context.contentResolver.openInputStream(ini.uri)
-            val writer = Wini(inputStream)
+                ?: return false
+            val writer = inputStream.use { Wini(it) }
             writer.put(mapSectionNameToIni(setting.section!!), setting.key, setting.valueAsString)
-            inputStream!!.close()
             val outputStream = context.contentResolver.openOutputStream(ini.uri, "wt")
-            writer.store(outputStream)
-            outputStream!!.flush()
-            outputStream.close()
+                ?: return false
+            outputStream.use {
+                writer.store(it)
+                it.flush()
+            }
+            return true
         } catch (e: Exception) {
             Log.error("[SettingsFile] Error saving game config $gameId.ini: ${e.message}")
+            return false
         }
     }
 

@@ -136,7 +136,18 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
         if (TextUtils.isEmpty(gameId)) {
             return
         }
-        SettingsFile.saveCustomGameSetting(gameId, BooleanSetting.USE_PER_GAME_SETTINGS)
+        if (!SettingsFile.saveCustomGameSetting(gameId, BooleanSetting.USE_PER_GAME_SETTINGS)) {
+            fragmentView.showToastMessage(
+                CitraApplication.appContext.getString(
+                    R.string.error_saving,
+                    gameId,
+                    "Could not write the per-game settings file"
+                ),
+                true
+            )
+            return
+        }
+
         settings.loadSettings(gameId, settingsActivity)
         loadSettingsList()
     }
