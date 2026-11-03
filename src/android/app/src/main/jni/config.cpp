@@ -425,7 +425,7 @@ void Config::Reload() {
     LoadINI(DefaultINI::android_config_default_file_content);
     ReadValues();
 
-    if (program_id == 0 || !Settings::values.use_per_game_settings.GetValue()) {
+    if (program_id == 0) {
         return;
     }
 
@@ -437,6 +437,21 @@ void Config::Reload() {
     std::string game_config_buffer;
     FileUtil::ReadFileToString(true, game_settings_path, game_config_buffer);
     if (game_config_buffer.empty()) {
+        Settings::values.use_per_game_settings = false;
+        return;
+    }
+
+    const bool legacy_global_value = Settings::values.use_per_game_settings.GetValue();
+    const INIReader game_config_reader(game_config_buffer.c_str(), game_config_buffer.size());
+    const std::string per_game_setting = game_config_reader.Get(
+        "Debugging", Settings::values.use_per_game_settings.GetLabel(), "");
+    const bool use_per_game_settings =
+        per_game_setting.empty()
+            ? legacy_global_value
+            : game_config_reader.GetBoolean("Debugging",
+                                            Settings::values.use_per_game_settings.GetLabel(), false);
+    Settings::values.use_per_game_settings = use_per_game_settings;
+    if (!use_per_game_settings) {
         return;
     }
 

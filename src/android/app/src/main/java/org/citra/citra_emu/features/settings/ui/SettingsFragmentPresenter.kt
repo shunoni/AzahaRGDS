@@ -87,7 +87,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
     }
 
     fun loadSettingsList() {
-        if (!TextUtils.isEmpty(gameId) && BooleanSetting.USE_PER_GAME_SETTINGS.boolean) {
+        if (!TextUtils.isEmpty(gameId)) {
             settingsActivity.setToolbarTitle("Application Settings: $gameId")
         }
         val sl = ArrayList<SettingsItem>()
@@ -130,6 +130,15 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
         }
         settingsList = sl
         fragmentView.showSettingsList(settingsList!!)
+    }
+
+    fun onPerGameSettingsChanged() {
+        if (TextUtils.isEmpty(gameId)) {
+            return
+        }
+        SettingsFile.saveCustomGameSetting(gameId, BooleanSetting.USE_PER_GAME_SETTINGS)
+        settings.loadSettings(gameId, settingsActivity)
+        loadSettingsList()
     }
 
     /** Returns the portrait mode width */
@@ -1892,7 +1901,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
         settingsActivity.setToolbarTitle(settingsActivity.getString(R.string.preferences_debug))
         sl.apply {
             add(HeaderSetting(R.string.debug_warning))
-            if (TextUtils.isEmpty(gameId)) {
+            if (!TextUtils.isEmpty(gameId)) {
                 add(
                     SwitchSetting(
                         BooleanSetting.USE_PER_GAME_SETTINGS,

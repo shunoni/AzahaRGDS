@@ -153,9 +153,6 @@ object SettingsFile {
     }
 
     fun saveCustomGameSetting(gameId: String, setting: AbstractSetting) {
-        if (setting.key == BooleanSetting.USE_PER_GAME_SETTINGS.key) {
-            return
-        }
         val ini = getCustomGameSettingsFile(gameId, true) ?: return
         try {
             val context: Context = CitraApplication.appContext
@@ -173,11 +170,44 @@ object SettingsFile {
     }
 
     fun saveCurrentGameSetting(setting: AbstractSetting, fileName: String = FILE_NAME_CONFIG) {
-        if (BooleanSetting.USE_PER_GAME_SETTINGS.boolean && NativeLibrary.isRunning()) {
+        if (NativeLibrary.isRunning()) {
             val gameId = String.format("%016X", NativeLibrary.getRunningTitleId())
-            saveCustomGameSetting(gameId, setting)
-        } else {
-            saveFile(fileName, setting)
+            if (isPerGameSettingsEnabled(gameId)) {
+                saveCustomGameSetting(gameId, setting)
+                return
+            }
+        }
+        saveFile(fileName, setting)
+    }
+
+    private fun isPerGameSettingsEnabled(gameId: String): Boolean {
+        val ini = getCustomGameSettingsFile(gameId, false) ?: return false
+        return try {
+            val inputStream = CitraApplication.appContext.contentResolver.openInputStream(ini.uri)
+                ?: return false
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                var inDebugSection = false
+                while (true) {
+                    val line = reader.readLine() ?: break
+                    val trimmedLine = line.trim()
+                    if (trimmedLine.startsWith("[") && trimmedLine.endsWith("]")) {
+                        inDebugSection = trimmedLine.substring(1, trimmedLine.length - 1)
+                            .equals("Debugging", ignoreCase = true)
+                    } else if (inDebugSection) {
+                        val separator = trimmedLine.indexOf('=')
+                        if (separator >= 0 && trimmedLine.substring(0, separator).trim()
+                                .equals(BooleanSetting.USE_PER_GAME_SETTINGS.key, ignoreCase = true)
+                        ) {
+                            return trimmedLine.substring(separator + 1).trim()
+                                .equals("true", ignoreCase = true)
+                        }
+                    }
+                }
+                false
+            }
+        } catch (e: Exception) {
+            Log.error("[SettingsFile] Error reading per-game mode for $gameId: ${e.message}")
+            false
         }
     }
 

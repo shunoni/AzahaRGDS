@@ -48,8 +48,27 @@ class Settings {
         IntListSetting.clear()
         StringSetting.clear()
         loadCitraSettings(view)
-        if (!TextUtils.isEmpty(gameId) && BooleanSetting.USE_PER_GAME_SETTINGS.boolean) {
-            loadCustomGameSettings(gameId!!, view)
+        if (!TextUtils.isEmpty(gameId)) {
+            val legacyGlobalValue = BooleanSetting.USE_PER_GAME_SETTINGS.boolean
+            val gameSections = SettingsFile.readCustomGameSettings(gameId!!, view)
+            val customDebugSection = gameSections.entries
+                .firstOrNull { it.key == SECTION_DEBUG }
+                ?.value
+            val gameToggle = customDebugSection?.getSetting(BooleanSetting.USE_PER_GAME_SETTINGS.key)
+                as? AbstractBooleanSetting
+            val useGameSettings = gameToggle?.boolean
+                ?: (legacyGlobalValue && gameSections.isNotEmpty())
+
+            BooleanSetting.USE_PER_GAME_SETTINGS.boolean = useGameSettings
+            if (gameToggle == null && useGameSettings) {
+                // Migrate existing per-game files created while the old global switch was on.
+                SettingsFile.saveCustomGameSetting(gameId!!, BooleanSetting.USE_PER_GAME_SETTINGS)
+            }
+            if (useGameSettings) {
+                mergeSections(gameSections)
+            } else {
+                sections[SECTION_DEBUG]!!.putSetting(BooleanSetting.USE_PER_GAME_SETTINGS)
+            }
         }
         isLoaded = true
     }
@@ -58,11 +77,6 @@ class Settings {
         for ((fileName) in configFileSectionsMap) {
             sections.putAll(SettingsFile.readFile(fileName, view))
         }
-    }
-
-    private fun loadCustomGameSettings(gameId: String, view: SettingsActivityView?) {
-        // Custom game settings
-        mergeSections(SettingsFile.readCustomGameSettings(gameId, view))
     }
 
     private fun mergeSections(updatedSections: HashMap<String, SettingSection?>) {
@@ -83,17 +97,7 @@ class Settings {
 
     fun saveSettings(view: SettingsActivityView) {
         if (TextUtils.isEmpty(gameId)) {
-            view.showToastMessage(
-                CitraApplication.appContext.getString(R.string.ini_saved),
-                false
-            )
-            for ((fileName, sectionNames) in configFileSectionsMap.entries) {
-                val iniSections = TreeMap<String, SettingSection?>()
-                for (section in sectionNames) {
-                    iniSections[section] = sections[section]
-                }
-                SettingsFile.saveFile(fileName, iniSections, view)
-            }
+            saveGlobalSettings(view)
         } else {
             if (BooleanSetting.USE_PER_GAME_SETTINGS.boolean) {
                 val gameSections = TreeMap<String, SettingSection?>()
@@ -101,10 +105,7 @@ class Settings {
                     val original = sections[sectionName] ?: continue
                     val gameSection = SettingSection(sectionName)
                     for (setting in original.settings.values) {
-                        // This mode switch always belongs to the global configuration.
-                        if (setting.key != BooleanSetting.USE_PER_GAME_SETTINGS.key) {
-                            gameSection.putSetting(setting)
-                        }
+                        gameSection.putSetting(setting)
                     }
                     gameSections[sectionName] = gameSection
                 }
@@ -120,7 +121,18 @@ class Settings {
         for ((fileName, sectionNames) in configFileSectionsMap.entries) {
             val iniSections = TreeMap<String, SettingSection?>()
             for (section in sectionNames) {
-                iniSections[section] = sections[section]
+                val original = sections[section]
+                if (section == SECTION_DEBUG && original != null) {
+                    val globalSection = SettingSection(section)
+                    for (setting in original.settings.values) {
+                        if (setting.key != BooleanSetting.USE_PER_GAME_SETTINGS.key) {
+                            globalSection.putSetting(setting)
+                        }
+                    }
+                    iniSections[section] = globalSection
+                } else {
+                    iniSections[section] = original
+                }
             }
             SettingsFile.saveFile(fileName, iniSections, view)
         }

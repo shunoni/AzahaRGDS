@@ -45,6 +45,7 @@ import org.citra.citra_emu.features.settings.model.AbstractIntSetting
 import org.citra.citra_emu.features.settings.model.AbstractSetting
 import org.citra.citra_emu.features.settings.model.AbstractShortSetting
 import org.citra.citra_emu.features.settings.model.AbstractStringSetting
+import org.citra.citra_emu.features.settings.model.BooleanSetting
 import org.citra.citra_emu.features.settings.model.FloatSetting
 import org.citra.citra_emu.features.settings.model.ScaledFloatSetting
 import org.citra.citra_emu.features.settings.model.view.DateTimeSetting
@@ -228,6 +229,11 @@ class SettingsAdapter(private val fragmentView: SettingsFragmentView, public val
         val setting = item.setChecked(checked)
         fragmentView.putSetting(setting)
         fragmentView.onSettingChanged()
+
+        if (setting.key == BooleanSetting.USE_PER_GAME_SETTINGS.key) {
+            fragmentView.onPerGameSettingsChanged()
+            return
+        }
 
         // If statement is required otherwise the app will crash on activity recreate ex. theme settings
         if (fragmentView.activityView != null) {

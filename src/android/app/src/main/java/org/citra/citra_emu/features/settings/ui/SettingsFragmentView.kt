@@ -56,4 +56,7 @@ interface SettingsFragmentView {
      * Have the fragment tell the containing Activity that a setting was modified.
      */
     fun onSettingChanged()
+
+    /** Reload settings from the correct global or per-game source after its mode changes. */
+    fun onPerGameSettingsChanged()
 }

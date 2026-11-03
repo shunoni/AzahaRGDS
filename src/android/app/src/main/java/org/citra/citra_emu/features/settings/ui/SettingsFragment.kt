@@ -97,6 +97,10 @@ class SettingsFragment :
         activityView!!.onSettingChanged()
     }
 
+    override fun onPerGameSettingsChanged() {
+        fragmentPresenter.onPerGameSettingsChanged()
+    }
+
     private fun setInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(
             binding.root
