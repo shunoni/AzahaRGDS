@@ -1339,9 +1339,8 @@ void RasterizerCache<T>::InvalidateRegion(PAddr addr, u32 size, SurfaceId region
         // If the CPU is invalidating this region we want to remove it
         // to (likely) mark the memory pages as uncached
         if (!region_owner_id && size <= 8) {
-            // Keep CPU memory coherent before invalidating a GPU surface. Games may partially
-            // update texture data here, so skipping this flush can leave stale or incomplete data.
-            FlushRegion(surface.addr, surface.size, surface_id);
+            // MMJ Optimization (Skip CPU Access):
+            // Avoid downloading surfaces back to CPU memory, eliminating GPU stall & CPU writeback
             remove_surfaces.push_back(surface_id);
             return;
         }
