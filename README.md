@@ -1,5 +1,7 @@
 DOWNLOAD ALL BUILDS FROM THE ACTIONS TAB!!! The main branch will be updated to match the rgds-speed-optimizations branch every once in a while once the new features are tested and confirmed to work.
 
+Feel free to contribute (:
+
 Azahar MMJ is a lightweight fork of Azahar Plus with performance tweaks for Android-based dual screen devices such as the Anbernic RGDS, which is the device it is tailored for. For most dual screen devices, this emulator is not needed as normal emulators should perform fine. Less powerful ones, like the RGDS, cannot run normal emulators. This emulator is tailored for those devices that need the extra performance to run 3DS games. It uses various hacks from Citra MMJ (as implied by the name) and some of my own, and merges them into one big set of performance tweaks. In other words, we prioritize speed over accuracy.
 
 ![App Logo](https://github.com/shunoni/AzahaRGDS/blob/AzaharPlus/logo.jpg?raw=true)
@@ -17,3 +19,4 @@ Here are the stats on my Anbernic RGDS (Base model, Android, Stock OS) :
 | Minicraft 3D (Game of Tobi) | 100% locked on average settings | Mode 1 | No | This is an unofficial port made for the original 3DS. |
 | Minecraft (Official port) | 60-70% average, unlikely to ever reach 100% | Mode 2 | Yes | I seriously doubt we'll ever reach full speed on this one. |
 | Geometry Dash 3DS (AleFunky) | 100% locked | Mode 0/None | No | *Clutterfunk intensifies* |
+| Mario 3D Land | 70%-80% average | Mode 1 | No | None |
