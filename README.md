@@ -13,5 +13,5 @@ Here are the stats on my Anbernic RGDS (Base model, Android, Stock OS) :
 | 3DS HOME menu | Almost 100%, working on it | Mode 1 | No | Small stutters when first booted, fine after that |
 | Mario Kart 7 | 80% average, working on it | Mode 2 | No | This is one of the main games I wanted to play, so I'm still optimizing it. |
 | Minicraft 3D (Game of Tobi) | 100% locked on average settings | Mode 1 | No | This is an unofficial port made for the original 3DS. |
-| Minecraft (Official port) | 60-70% average, unlikely to ever reach 100% | Mode 2 | No | I seriously doubt we'll ever reach full speed on this one. |
+| Minecraft (Official port) | 60-70% average, unlikely to ever reach 100% | Mode 2 | Yes | I seriously doubt we'll ever reach full speed on this one. |
 | Geometry Dash 3DS (AleFunky) | 100% locked | Mode 0/None | No | *Clutterfunk intensifies* |
