@@ -178,6 +178,11 @@ void LogSettings() {
     log_setting("Debugging_UsePerGameSettings", values.use_per_game_settings.GetValue());
     log_setting("Debugging_PreventFrameLimiterCatchUp",
                 values.prevent_frame_limiter_catch_up.GetValue());
+    log_setting("Debugging_UnsafeCpuOptimizations", values.unsafe_cpu_optimizations.GetValue());
+    log_setting("Debugging_SkipSlowDrawFallback", values.skip_slow_draw_fallback.GetValue());
+    log_setting("Debugging_FastTextureInvalidation",
+                values.fast_texture_invalidation.GetValue());
+    log_setting("Debugging_FastShaderPrecision", values.fast_shader_precision.GetValue());
 }
 
 bool IsConfiguringGlobal() {

@@ -661,6 +661,10 @@ struct Values {
     Setting<bool> mii_compatibility_fixes{false, Keys::mii_compatibility_fixes};
     Setting<bool> use_per_game_settings{false, Keys::use_per_game_settings};
     Setting<bool> prevent_frame_limiter_catch_up{false, Keys::prevent_frame_limiter_catch_up};
+    Setting<bool> unsafe_cpu_optimizations{true, Keys::unsafe_cpu_optimizations};
+    Setting<bool> skip_slow_draw_fallback{true, Keys::skip_slow_draw_fallback};
+    Setting<bool> fast_texture_invalidation{true, Keys::fast_texture_invalidation};
+    Setting<bool> fast_shader_precision{true, Keys::fast_shader_precision};
 
     // WebService
     Setting<std::string> web_api_url{"http://88.198.47.46:5000", Keys::web_api_url};

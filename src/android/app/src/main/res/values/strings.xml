@@ -414,6 +414,14 @@
     <string name="instant_debug_log_description">Immediately commits the debug log to file. Use this if Azahar crashes and the log output is being cut.</string>
     <string name="prevent_frame_limiter_catch_up">Prevent Frame Limiter Speed-Up After Slow Frames</string>
     <string name="prevent_frame_limiter_catch_up_description">Prevents emulation from running faster after a slow frame. When frames are consistently late, actual emulation speed may stay below the configured limit.</string>
+    <string name="unsafe_cpu_optimizations">Unsafe CPU Optimizations</string>
+    <string name="unsafe_cpu_optimizations_description">Enables aggressive JIT optimizations that trade floating point accuracy and memory consistency for higher performance. Restart Azahar after changing this setting.</string>
+    <string name="skip_slow_draw_fallback">Skip Slow Software Vertex Fallback</string>
+    <string name="skip_slow_draw_fallback_description">Skips the CPU software vertex path when hardware drawing fails instead of taking a large performance hit. Disable this if games are missing geometry.</string>
+    <string name="fast_texture_invalidation">Fast Texture Invalidation</string>
+    <string name="fast_texture_invalidation_description">Skips copying GPU surfaces back to CPU memory when games partially update texture memory. Disable this if games show stale or corrupted textures.</string>
+    <string name="fast_shader_precision">Fast Shader Precision</string>
+    <string name="fast_shader_precision_description">Uses medium precision in OpenGL ES shaders for faster GPU execution. Disable this if games show graphical artifacts.</string>
     <string name="mii_compatibility_fixes">Mii Compatibility Fixes</string>
     <string name="mii_compatibility_fixes_description">Restores full shader precision and texture synchronization to address Mii face artifacts or editor crashes. This can reduce performance in Mii-heavy games. Restart Azahar after changing this setting.</string>
     <string name="use_per_game_settings">Use Per-Game Settings</string>

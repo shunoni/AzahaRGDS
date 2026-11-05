@@ -24,6 +24,26 @@ enum class BooleanSetting(
         Settings.SECTION_DEBUG,
         false
     ),
+    UNSAFE_CPU_OPTIMIZATIONS(
+        SettingKeys.unsafe_cpu_optimizations(),
+        Settings.SECTION_DEBUG,
+        true
+    ),
+    SKIP_SLOW_DRAW_FALLBACK(
+        SettingKeys.skip_slow_draw_fallback(),
+        Settings.SECTION_DEBUG,
+        true
+    ),
+    FAST_TEXTURE_INVALIDATION(
+        SettingKeys.fast_texture_invalidation(),
+        Settings.SECTION_DEBUG,
+        true
+    ),
+    FAST_SHADER_PRECISION(
+        SettingKeys.fast_shader_precision(),
+        Settings.SECTION_DEBUG,
+        true
+    ),
     MII_COMPATIBILITY_FIXES(SettingKeys.mii_compatibility_fixes(), Settings.SECTION_DEBUG, false),
     USE_PER_GAME_SETTINGS(SettingKeys.use_per_game_settings(), Settings.SECTION_DEBUG, false),
     ENABLE_RPC_SERVER(SettingKeys.enable_rpc_server(), Settings.SECTION_DEBUG, false),

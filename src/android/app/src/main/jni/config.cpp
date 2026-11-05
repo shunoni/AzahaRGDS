@@ -398,6 +398,10 @@ void Config::ReadValues() {
     ReadSetting("Debugging", Settings::values.mii_compatibility_fixes);
     ReadSetting("Debugging", Settings::values.use_per_game_settings);
     ReadSetting("Debugging", Settings::values.prevent_frame_limiter_catch_up);
+    ReadSetting("Debugging", Settings::values.unsafe_cpu_optimizations);
+    ReadSetting("Debugging", Settings::values.skip_slow_draw_fallback);
+    ReadSetting("Debugging", Settings::values.fast_texture_invalidation);
+    ReadSetting("Debugging", Settings::values.fast_shader_precision);
 
     for (const auto& service_module : Service::service_module_map) {
         bool use_lle =

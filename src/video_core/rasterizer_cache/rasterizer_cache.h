@@ -1339,7 +1339,8 @@ void RasterizerCache<T>::InvalidateRegion(PAddr addr, u32 size, SurfaceId region
         // If the CPU is invalidating this region we want to remove it
         // to (likely) mark the memory pages as uncached
         if (!region_owner_id && size <= 8) {
-            if (Settings::values.mii_compatibility_fixes.GetValue()) {
+            if (Settings::values.mii_compatibility_fixes.GetValue() ||
+                !Settings::values.fast_texture_invalidation.GetValue()) {
                 // Preserve GPU-rendered bytes before a game partially updates this memory on CPU.
                 FlushRegion(surface.addr, surface.size, surface_id);
             }

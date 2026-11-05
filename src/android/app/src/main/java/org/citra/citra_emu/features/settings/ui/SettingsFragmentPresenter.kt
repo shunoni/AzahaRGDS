@@ -145,6 +145,8 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                 ),
                 true
             )
+            settings.loadSettings(gameId, settingsActivity)
+            loadSettingsList()
             return
         }
 
@@ -172,6 +174,17 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
     private fun addConfigSettings(sl: ArrayList<SettingsItem>) {
         settingsActivity.setToolbarTitle(settingsActivity.getString(R.string.preferences_settings))
         sl.apply {
+            if (!TextUtils.isEmpty(gameId)) {
+                add(
+                    SwitchSetting(
+                        BooleanSetting.USE_PER_GAME_SETTINGS,
+                        R.string.use_per_game_settings,
+                        R.string.use_per_game_settings_description,
+                        BooleanSetting.USE_PER_GAME_SETTINGS.key,
+                        BooleanSetting.USE_PER_GAME_SETTINGS.defaultValue
+                    )
+                )
+            }
             add(
                 SubmenuSetting(
                     R.string.preferences_general,
@@ -1923,17 +1936,6 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
         settingsActivity.setToolbarTitle(settingsActivity.getString(R.string.preferences_debug))
         sl.apply {
             add(HeaderSetting(R.string.debug_warning))
-            if (!TextUtils.isEmpty(gameId)) {
-                add(
-                    SwitchSetting(
-                        BooleanSetting.USE_PER_GAME_SETTINGS,
-                        R.string.use_per_game_settings,
-                        R.string.use_per_game_settings_description,
-                        BooleanSetting.USE_PER_GAME_SETTINGS.key,
-                        BooleanSetting.USE_PER_GAME_SETTINGS.defaultValue
-                    )
-                )
-            }
             add(
                 SliderSetting(
                     IntSetting.CPU_CLOCK_SPEED,
@@ -2025,6 +2027,42 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.prevent_frame_limiter_catch_up_description,
                     BooleanSetting.PREVENT_FRAME_LIMITER_CATCH_UP.key,
                     BooleanSetting.PREVENT_FRAME_LIMITER_CATCH_UP.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.UNSAFE_CPU_OPTIMIZATIONS,
+                    R.string.unsafe_cpu_optimizations,
+                    R.string.unsafe_cpu_optimizations_description,
+                    BooleanSetting.UNSAFE_CPU_OPTIMIZATIONS.key,
+                    BooleanSetting.UNSAFE_CPU_OPTIMIZATIONS.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.SKIP_SLOW_DRAW_FALLBACK,
+                    R.string.skip_slow_draw_fallback,
+                    R.string.skip_slow_draw_fallback_description,
+                    BooleanSetting.SKIP_SLOW_DRAW_FALLBACK.key,
+                    BooleanSetting.SKIP_SLOW_DRAW_FALLBACK.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.FAST_TEXTURE_INVALIDATION,
+                    R.string.fast_texture_invalidation,
+                    R.string.fast_texture_invalidation_description,
+                    BooleanSetting.FAST_TEXTURE_INVALIDATION.key,
+                    BooleanSetting.FAST_TEXTURE_INVALIDATION.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.FAST_SHADER_PRECISION,
+                    R.string.fast_shader_precision,
+                    R.string.fast_shader_precision_description,
+                    BooleanSetting.FAST_SHADER_PRECISION.key,
+                    BooleanSetting.FAST_SHADER_PRECISION.defaultValue
                 )
             )
             add(

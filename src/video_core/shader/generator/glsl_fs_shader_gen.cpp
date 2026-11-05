@@ -1270,7 +1270,8 @@ void FragmentModule::DefineExtensions() {
     }
 
     if (!profile.is_vulkan) {
-        out += Settings::values.mii_compatibility_fixes.GetValue()
+        out += (Settings::values.mii_compatibility_fixes.GetValue() ||
+                !Settings::values.fast_shader_precision.GetValue())
                    ? fragment_shader_precision_OES_mii_compat
                    : fragment_shader_precision_OES;
     }
