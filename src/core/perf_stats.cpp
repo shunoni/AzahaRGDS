@@ -255,6 +255,9 @@ void FrameLimiter::DoFrameLimiting(microseconds current_system_time_us) {
     frame_limiting_delta_err -= duration_cast<microseconds>(now - previous_walltime);
     frame_limiting_delta_err =
         std::clamp(frame_limiting_delta_err, -max_lag_time_us, max_lag_time_us);
+    if (Settings::values.prevent_frame_limiter_catch_up) {
+        frame_limiting_delta_err = std::max(frame_limiting_delta_err, microseconds::zero());
+    }
 
     if (frame_limiting_delta_err > microseconds::zero()) {
         if (wait_callback) {
@@ -264,6 +267,9 @@ void FrameLimiter::DoFrameLimiting(microseconds current_system_time_us) {
         }
         auto now_after_sleep = Clock::now();
         frame_limiting_delta_err -= duration_cast<microseconds>(now_after_sleep - now);
+        if (Settings::values.prevent_frame_limiter_catch_up) {
+            frame_limiting_delta_err = std::max(frame_limiting_delta_err, microseconds::zero());
+        }
         now = now_after_sleep;
     }
 

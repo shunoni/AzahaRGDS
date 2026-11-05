@@ -660,6 +660,7 @@ struct Values {
     Setting<bool> enable_exception_handler{false, Keys::enable_exception_handler};
     Setting<bool> mii_compatibility_fixes{false, Keys::mii_compatibility_fixes};
     Setting<bool> use_per_game_settings{false, Keys::use_per_game_settings};
+    Setting<bool> prevent_frame_limiter_catch_up{false, Keys::prevent_frame_limiter_catch_up};
 
     // WebService
     Setting<std::string> web_api_url{"http://88.198.47.46:5000", Keys::web_api_url};

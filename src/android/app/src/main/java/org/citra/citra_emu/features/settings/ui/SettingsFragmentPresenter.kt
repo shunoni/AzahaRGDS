@@ -2020,6 +2020,15 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
             )
             add(
                 SwitchSetting(
+                    BooleanSetting.PREVENT_FRAME_LIMITER_CATCH_UP,
+                    R.string.prevent_frame_limiter_catch_up,
+                    R.string.prevent_frame_limiter_catch_up_description,
+                    BooleanSetting.PREVENT_FRAME_LIMITER_CATCH_UP.key,
+                    BooleanSetting.PREVENT_FRAME_LIMITER_CATCH_UP.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
                     BooleanSetting.MII_COMPATIBILITY_FIXES,
                     R.string.mii_compatibility_fixes,
                     R.string.mii_compatibility_fixes_description,

@@ -412,6 +412,8 @@
     <string name="renderer_debug_description">Log additional graphics related debug information. When enabled, game performance will be significantly reduced.</string>
     <string name="instant_debug_log">Flush Log Output on Every Message</string>
     <string name="instant_debug_log_description">Immediately commits the debug log to file. Use this if Azahar crashes and the log output is being cut.</string>
+    <string name="prevent_frame_limiter_catch_up">Prevent Frame Limiter Speed-Up After Slow Frames</string>
+    <string name="prevent_frame_limiter_catch_up_description">Prevents emulation from running faster after a slow frame. When frames are consistently late, actual emulation speed may stay below the configured limit.</string>
     <string name="mii_compatibility_fixes">Mii Compatibility Fixes</string>
     <string name="mii_compatibility_fixes_description">Restores full shader precision and texture synchronization to address Mii face artifacts or editor crashes. This can reduce performance in Mii-heavy games. Restart Azahar after changing this setting.</string>
     <string name="use_per_game_settings">Use Per-Game Settings</string>

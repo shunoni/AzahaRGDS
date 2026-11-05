@@ -176,6 +176,8 @@ void LogSettings() {
     log_setting("Debugging_EnableExceptionHandler", values.enable_exception_handler.GetValue());
     log_setting("Debugging_MiiCompatibilityFixes", values.mii_compatibility_fixes.GetValue());
     log_setting("Debugging_UsePerGameSettings", values.use_per_game_settings.GetValue());
+    log_setting("Debugging_PreventFrameLimiterCatchUp",
+                values.prevent_frame_limiter_catch_up.GetValue());
 }
 
 bool IsConfiguringGlobal() {

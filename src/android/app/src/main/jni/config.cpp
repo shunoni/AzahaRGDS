@@ -397,6 +397,7 @@ void Config::ReadValues() {
     ReadSetting("Debugging", Settings::values.enable_exception_handler);
     ReadSetting("Debugging", Settings::values.mii_compatibility_fixes);
     ReadSetting("Debugging", Settings::values.use_per_game_settings);
+    ReadSetting("Debugging", Settings::values.prevent_frame_limiter_catch_up);
 
     for (const auto& service_module : Service::service_module_map) {
         bool use_lle =
@@ -423,7 +424,17 @@ void Config::Reload() {
                        *key);
         }
     }
-    LoadINI(DefaultINI::android_config_default_file_content);
+    android_config.reset();
+    std::string global_config_buffer;
+    FileUtil::ReadFileToString(true, android_config_loc, global_config_buffer);
+    if (!global_config_buffer.empty()) {
+        android_config =
+            std::make_unique<INIReader>(global_config_buffer.c_str(), global_config_buffer.size());
+    }
+    if (!LoadINI(DefaultINI::android_config_default_file_content)) {
+        return;
+    }
+    FileUtil::ReadFileToString(true, android_config_loc, global_config_buffer);
     ReadValues();
 
     if (program_id == 0) {
@@ -456,11 +467,11 @@ void Config::Reload() {
         return;
     }
 
-    std::string global_config_buffer;
-    FileUtil::ReadFileToString(true, android_config_loc, global_config_buffer);
     const std::string merged_config = MergeIniBuffers(global_config_buffer, game_config_buffer);
-    android_config = std::make_unique<INIReader>(merged_config.c_str(), merged_config.size());
-    if (android_config->ParseError() >= 0) {
+    auto merged_config_reader =
+        std::make_unique<INIReader>(merged_config.c_str(), merged_config.size());
+    if (merged_config_reader->ParseError() >= 0) {
+        android_config = std::move(merged_config_reader);
         ReadValues();
     }
 }

@@ -125,6 +125,7 @@ foreach(KEY IN ITEMS
     "enable_exception_handler"
     "mii_compatibility_fixes"
     "use_per_game_settings"
+    "prevent_frame_limiter_catch_up"
     "use_integer_scaling"
     "layouts_to_cycle"
     "camera_inner_flip"

@@ -330,6 +330,16 @@
         </property>
        </widget>
       </item>
+      <item row="6" column="0">
+       <widget class="QCheckBox" name="prevent_frame_limiter_catch_up">
+        <property name="toolTip">
+         <string>Do not let emulation run faster than the configured speed after a slow frame. When frames are consistently late, actual emulation speed may stay below the configured limit.</string>
+        </property>
+        <property name="text">
+         <string>Prevent frame limiter speed-up after slow frames</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>

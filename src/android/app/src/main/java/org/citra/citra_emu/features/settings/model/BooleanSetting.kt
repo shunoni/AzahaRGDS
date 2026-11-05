@@ -19,6 +19,11 @@ enum class BooleanSetting(
     ALLOW_PLUGIN_LOADER(SettingKeys.allow_plugin_loader(), Settings.SECTION_SYSTEM, true),
     SWAP_SCREEN(SettingKeys.swap_screen(), Settings.SECTION_LAYOUT, false),
     INSTANT_DEBUG_LOG(SettingKeys.instant_debug_log(), Settings.SECTION_DEBUG, false),
+    PREVENT_FRAME_LIMITER_CATCH_UP(
+        SettingKeys.prevent_frame_limiter_catch_up(),
+        Settings.SECTION_DEBUG,
+        false
+    ),
     MII_COMPATIBILITY_FIXES(SettingKeys.mii_compatibility_fixes(), Settings.SECTION_DEBUG, false),
     USE_PER_GAME_SETTINGS(SettingKeys.use_per_game_settings(), Settings.SECTION_DEBUG, false),
     ENABLE_RPC_SERVER(SettingKeys.enable_rpc_server(), Settings.SECTION_DEBUG, false),

@@ -593,6 +593,10 @@ static const char* android_config_default_file_content = (BOOST_HANA_STRING(R"(
 # 0 (default): Off, 1: On
 )") DECLARE_KEY(use_per_game_settings) BOOST_HANA_STRING(R"(
 
+# Prevent frame limiter catch-up after slow frames
+# 0 (default): Off, 1: On
+)") DECLARE_KEY(prevent_frame_limiter_catch_up) BOOST_HANA_STRING(R"(
+
 # Delay the start of apps when LLE modules are enabled
 # 0: Off, 1 (default): On
 )") DECLARE_KEY(delay_start_for_lle_modules) BOOST_HANA_STRING(R"(
