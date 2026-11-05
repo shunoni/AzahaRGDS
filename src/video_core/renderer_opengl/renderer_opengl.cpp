@@ -1,6 +1,6 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2014-2026 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 #include "common/logging/log.h"
 #include "common/microprofile.h"
@@ -152,6 +152,13 @@ void RendererOpenGL::SwapBuffers() {
     EndFrame();
     prev_state.Apply();
     rasterizer.TickFrame();
+}
+
+void RendererOpenGL::OnSkippedFrame() {
+    if (secondary_window) {
+        secondary_window->PollEvents();
+    }
+    EndFrame();
 }
 
 void RendererOpenGL::RenderScreenshot() {
@@ -876,13 +883,13 @@ void RendererOpenGL::DrawBottomScreen(const Layout::FramebufferLayout& layout,
     }
 }
 
-void RendererOpenGL::TryPresent(int timeout_ms, bool is_secondary) {
+bool RendererOpenGL::TryPresent(int timeout_ms, bool is_secondary) {
     const auto& window = is_secondary ? *secondary_window : render_window;
     const auto& layout = window.GetFramebufferLayout();
     auto frame = window.mailbox->TryGetPresentFrame(timeout_ms);
     if (!frame) {
         LOG_DEBUG(Render_OpenGL, "TryGetPresentFrame returned no frame to present");
-        return;
+        return false;
     }
 
     // Clearing before a full overwrite of a fbo can signal to drivers that they can avoid a
@@ -915,6 +922,7 @@ void RendererOpenGL::TryPresent(int timeout_ms, bool is_secondary) {
     glFlush();
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    return true;
 }
 
 void RendererOpenGL::PrepareVideoDumping() {

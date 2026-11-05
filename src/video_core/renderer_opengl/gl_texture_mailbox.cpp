@@ -1,6 +1,6 @@
 // Copyright 2023 Citra Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 #include "common/logging/log.h"
 #include "video_core/renderer_opengl/gl_state.h"
@@ -116,8 +116,8 @@ Frontend::Frame* OGLTextureMailbox::TryGetPresentFrame(int timeout_ms) {
     present_cv.wait_for(lock, std::chrono::milliseconds(timeout_ms),
                         [&] { return !present_queue.empty(); });
     if (present_queue.empty()) {
-        // Timed out waiting for a frame to draw so return the previous frame
-        return previous_frame;
+        // No new image: leave the window's last posted buffer on screen.
+        return nullptr;
     }
 
     LoadPresentFrame();

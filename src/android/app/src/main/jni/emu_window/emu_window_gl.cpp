@@ -1,6 +1,6 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2019-2025 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 #include <algorithm>
 #include <array>
@@ -219,6 +219,7 @@ void EmuWindow_Android_OpenGL::TryPresenting() {
     eglMakeCurrent(egl_display, egl_surface, egl_surface, egl_context);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     eglSwapInterval(egl_display, Settings::values.use_vsync ? 1 : 0);
-    system.GPU().Renderer().TryPresent(0, is_secondary);
-    eglSwapBuffers(egl_display, egl_surface);
+    if (system.GPU().Renderer().TryPresent(0, is_secondary)) {
+        eglSwapBuffers(egl_display, egl_surface);
+    }
 }

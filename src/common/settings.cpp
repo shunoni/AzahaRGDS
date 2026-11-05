@@ -1,6 +1,6 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2014-2026 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 #include <string_view>
 #include <utility>
@@ -87,6 +87,7 @@ void LogSettings() {
 
     LOG_INFO(Config, "Azahar Configuration:");
     log_setting("Core_UseCpuJit", values.use_cpu_jit.GetValue());
+    log_setting("Core_UseFastInterp", values.use_fastinterp.GetValue());
     log_setting("Core_CPUClockPercentage", values.cpu_clock_percentage.GetValue());
     log_setting("Controller_UseArticController", values.use_artic_base_controller.GetValue());
     log_setting("Renderer_UseGLES", values.use_gles.GetValue());
@@ -105,6 +106,7 @@ void LogSettings() {
     log_setting("Renderer_FrameLimit", values.frame_limit.GetValue());
     log_setting("Renderer_VSyncNew", values.use_vsync.GetValue());
     log_setting("Renderer_SkipDuplicateFrames", values.use_skip_duplicate_frames.GetValue());
+    log_setting("Renderer_FrameSkipMode", values.frame_skip_mode.GetValue());
     log_setting("Renderer_PostProcessingShader", values.pp_shader_name.GetValue());
     log_setting("Renderer_FilterMode", values.filter_mode.GetValue());
     log_setting("Renderer_TextureFilter", GetTextureFilterName(values.texture_filter.GetValue()));
@@ -171,8 +173,11 @@ void LogSettings() {
     log_setting("Debugging_InstantDebugLog", values.instant_debug_log.GetValue());
     log_setting("Debugging_ToggleUniqueDataConsoleType",
                 values.toggle_unique_data_console_type.GetValue());
-    log_setting("Debugging_BreakOnUnmappedMemoryAccess",
-                values.break_on_unmapped_memory_access.GetValue());
+    log_setting("Debugging_EnableExceptionHandler", values.enable_exception_handler.GetValue());
+    log_setting("Debugging_MiiCompatibilityFixes", values.mii_compatibility_fixes.GetValue());
+    log_setting("Debugging_UsePerGameSettings", values.use_per_game_settings.GetValue());
+    log_setting("Debugging_PreventFrameLimiterCatchUp",
+                values.prevent_frame_limiter_catch_up.GetValue());
 }
 
 bool IsConfiguringGlobal() {
@@ -218,6 +223,7 @@ void RestoreGlobalState(bool is_powered_on) {
     values.shaders_accurate_mul.SetGlobal(true);
     values.use_vsync.SetGlobal(true);
     values.use_skip_duplicate_frames.SetGlobal(true);
+    values.frame_skip_mode.SetGlobal(true);
     values.resolution_factor.SetGlobal(true);
     values.use_integer_scaling.SetGlobal(true);
     values.frame_limit.SetGlobal(true);

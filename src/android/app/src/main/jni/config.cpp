@@ -1,11 +1,15 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2014-2026 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 #include <iomanip>
+#include <cctype>
+#include <algorithm>
 #include <memory>
+#include <map>
 #include <ranges>
 #include <sstream>
+#include <string_view>
 #include <unordered_map>
 #include <INIReader.h>
 #include <boost/hana/string.hpp>
@@ -25,7 +29,75 @@
 #include "jni/default_ini.h"
 #include "jni/input_manager.h"
 
-Config::Config() {
+namespace {
+
+struct IniValue {
+    std::string section;
+    std::string key;
+    std::string value;
+};
+
+std::string NormalizeIniName(std::string value) {
+    std::transform(value.begin(), value.end(), value.begin(), [](unsigned char character) {
+        return static_cast<char>(std::tolower(character));
+    });
+    return value;
+}
+
+std::string TrimIniWhitespace(std::string value) {
+    const auto is_not_space = [](unsigned char character) { return !std::isspace(character); };
+    value.erase(value.begin(), std::find_if(value.begin(), value.end(), is_not_space));
+    value.erase(std::find_if(value.rbegin(), value.rend(), is_not_space).base(), value.end());
+    return value;
+}
+
+void AddIniBuffer(std::string_view buffer,
+                  std::map<std::pair<std::string, std::string>, IniValue>& values) {
+    std::istringstream input{std::string{buffer}};
+    std::string section;
+    std::string line;
+    while (std::getline(input, line)) {
+        line = TrimIniWhitespace(std::move(line));
+        if (line.empty() || line[0] == ';' || line[0] == '#') {
+            continue;
+        }
+        if (line.front() == '[' && line.back() == ']') {
+            section = TrimIniWhitespace(line.substr(1, line.size() - 2));
+            continue;
+        }
+        const auto equals = line.find('=');
+        if (equals == std::string::npos || section.empty()) {
+            continue;
+        }
+        std::string key = TrimIniWhitespace(line.substr(0, equals));
+        std::string value = TrimIniWhitespace(line.substr(equals + 1));
+        if (!key.empty()) {
+            values[{NormalizeIniName(section), NormalizeIniName(key)}] =
+                IniValue{section, std::move(key), std::move(value)};
+        }
+    }
+}
+
+std::string MergeIniBuffers(std::string_view global_config, std::string_view game_config) {
+    std::map<std::pair<std::string, std::string>, IniValue> values;
+    AddIniBuffer(global_config, values);
+    AddIniBuffer(game_config, values);
+
+    std::ostringstream merged;
+    std::string current_section;
+    for (const auto& [normalized_names, entry] : values) {
+        if (current_section != normalized_names.first) {
+            current_section = normalized_names.first;
+            merged << '[' << entry.section << "]\n";
+        }
+        merged << entry.key << '=' << entry.value << '\n';
+    }
+    return merged.str();
+}
+
+} // namespace
+
+Config::Config(u64 program_id_) : program_id{program_id_} {
     // TODO: Don't hardcode the path; let the frontend decide where to put the config files.
     android_config_loc = FileUtil::GetUserPath(FileUtil::UserPath::ConfigDir) + "config.ini";
     std::string ini_buffer;
@@ -135,6 +207,7 @@ void Config::ReadValues() {
 
     // Core
     ReadSetting("Core", Settings::values.use_cpu_jit);
+    ReadSetting("Core", Settings::values.use_fastinterp);
     ReadSetting("Core", Settings::values.cpu_clock_percentage);
 
     // Renderer
@@ -152,6 +225,7 @@ void Config::ReadValues() {
     ReadSetting("Renderer", Settings::values.use_disk_shader_cache);
     ReadSetting("Renderer", Settings::values.use_vsync);
     ReadSetting("Renderer", Settings::values.use_skip_duplicate_frames);
+    ReadSetting("Renderer", Settings::values.frame_skip_mode);
     ReadSetting("Renderer", Settings::values.texture_filter);
     ReadSetting("Renderer", Settings::values.texture_sampling);
     ReadSetting("Renderer", Settings::values.turbo_limit);
@@ -320,7 +394,10 @@ void Config::ReadValues() {
     ReadSetting("Debugging", Settings::values.instant_debug_log);
     ReadSetting("Debugging", Settings::values.enable_rpc_server);
     ReadSetting("Debugging", Settings::values.toggle_unique_data_console_type);
-    ReadSetting("Debugging", Settings::values.break_on_unmapped_memory_access);
+    ReadSetting("Debugging", Settings::values.enable_exception_handler);
+    ReadSetting("Debugging", Settings::values.mii_compatibility_fixes);
+    ReadSetting("Debugging", Settings::values.use_per_game_settings);
+    ReadSetting("Debugging", Settings::values.prevent_frame_limiter_catch_up);
 
     for (const auto& service_module : Service::service_module_map) {
         bool use_lle =
@@ -337,16 +414,64 @@ void Config::Reload() {
     for (auto key = Settings::Keys::keys_array.begin(); key != Settings::Keys::keys_array.end();
          ++key) {
         const auto key_declaration_string = std::string(*key) + " =";
-        if ((std::ranges::find(DefaultINI::android_config_omitted_keys, *key) ==
+        if ((std::ranges::find(DefaultINI::android_config_omitted_keys, std::string_view(*key)) ==
              std::end(DefaultINI::android_config_omitted_keys)) &&
-            (std::string(DefaultINI::android_config_default_file_content)
-                 .find(key_declaration_string) == std::string::npos)) {
+            (std::string_view(DefaultINI::android_config_default_file_content)
+                 .find(key_declaration_string) == std::string_view::npos)) {
             ASSERT_MSG(false,
                        "Validation of default config content (jni/default_ini.h) failed: Missing "
                        "declaration for key '{}'",
                        *key);
         }
     }
-    LoadINI(DefaultINI::android_config_default_file_content);
+    android_config.reset();
+    std::string global_config_buffer;
+    FileUtil::ReadFileToString(true, android_config_loc, global_config_buffer);
+    if (!global_config_buffer.empty()) {
+        android_config =
+            std::make_unique<INIReader>(global_config_buffer.c_str(), global_config_buffer.size());
+    }
+    if (!LoadINI(DefaultINI::android_config_default_file_content)) {
+        return;
+    }
+    FileUtil::ReadFileToString(true, android_config_loc, global_config_buffer);
     ReadValues();
+
+    if (program_id == 0) {
+        return;
+    }
+
+    std::ostringstream game_settings_name;
+    game_settings_name << "GameSettings/" << std::uppercase << std::hex << std::setw(16)
+                       << std::setfill('0') << program_id << ".ini";
+    const std::string game_settings_path =
+        FileUtil::GetUserPath(FileUtil::UserPath::UserDir) + game_settings_name.str();
+    std::string game_config_buffer;
+    FileUtil::ReadFileToString(true, game_settings_path, game_config_buffer);
+    if (game_config_buffer.empty()) {
+        Settings::values.use_per_game_settings = false;
+        return;
+    }
+
+    const bool legacy_global_value = Settings::values.use_per_game_settings.GetValue();
+    const INIReader game_config_reader(game_config_buffer.c_str(), game_config_buffer.size());
+    const std::string per_game_setting = game_config_reader.Get(
+        "Debugging", Settings::values.use_per_game_settings.GetLabel(), "");
+    const bool use_per_game_settings =
+        per_game_setting.empty()
+            ? legacy_global_value
+            : game_config_reader.GetBoolean("Debugging",
+                                            Settings::values.use_per_game_settings.GetLabel(), false);
+    Settings::values.use_per_game_settings = use_per_game_settings;
+    if (!use_per_game_settings) {
+        return;
+    }
+
+    const std::string merged_config = MergeIniBuffers(global_config_buffer, game_config_buffer);
+    auto merged_config_reader =
+        std::make_unique<INIReader>(merged_config.c_str(), merged_config.size());
+    if (merged_config_reader->ParseError() >= 0) {
+        android_config = std::move(merged_config_reader);
+        ReadValues();
+    }
 }

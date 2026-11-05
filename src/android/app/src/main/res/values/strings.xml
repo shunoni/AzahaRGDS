@@ -3,7 +3,7 @@
 <resources>
 
     <!-- General application strings -->
-    <string name="app_name" translatable="false">AzaharPlus</string>
+    <string name="app_name" translatable="false">Azahar Turbo RGDS</string>
     <string name="app_disclaimer">This software will run applications for the Nintendo 3DS handheld game console. No game titles are included.\n\nBefore you can begin with emulating, please select a folder to store Azahar\'s user data in.\n\nWhat\'s this:\n<a href='https://web.archive.org/web/20240304193549/https://github.com/citra-emu/citra/wiki/Citra-Android-user-data-and-storage'>Wiki - Citra Android user data and storage</a></string>
     <string name="app_notification_channel_name" translatable="false">Azahar</string>
     <string name="app_notification_channel_id" translatable="false">Azahar</string>
@@ -36,7 +36,7 @@
     <string name="select_games_folder_description">Allows Azahar to populate the application list</string>
     <string name="about">About</string>
     <string name="clear_streetpass_config">Clear StreetPass Configuration</string>
-    <string name="citra_description">An open-source 3DS emulator</string>
+    <string name="citra_description">An open-source 3DS emulator\nLicensed under GPLv3 or any later version</string>
     <string name="about_description">Build version, credits, and more</string>
     <string name="clear_streetpass_config_description">In case something went wrong with ZipPass</string>
     <string name="games_dir_selected">Application directory selected</string>
@@ -311,6 +311,11 @@
     <string name="texture_sampling_description">Overrides the sampling filter used by games. This can be useful in certain cases with poorly behaved games when upscaling. If unsure, set this to Game Controlled.</string>
     <string name="use_skip_duplicate_frames">Skip Presenting Duplicate Frames</string>
     <string name="use_skip_duplicate_frames_description">Skips the presentation of frames that are not unique. It also allows external frame generation tools to work correctly with 30fps games</string>
+    <string name="frame_skip_mode">Frame Skip Mode</string>
+    <string name="frame_skip_mode_description">Skips drawing selected frames while game logic, input, audio, and timing continue normally. The last displayed image remains on screen between drawn frames.</string>
+    <string name="frame_skip_mode_0">Mode 0 (Normal)</string>
+    <string name="frame_skip_mode_1">Mode 1 (Draw every other frame)</string>
+    <string name="frame_skip_mode_2">Mode 2 (Draw one in three frames)</string>
     <string name="shaders_accurate_mul">Accurate Multiplication</string>
     <string name="shaders_accurate_mul_description">Uses more accurate multiplication in hardware shaders, which may fix some graphical bugs. When enabled, performance will be reduced.</string>
     <string name="asynchronous_gpu">Enable Asynchronous GPU Emulation</string>
@@ -338,6 +343,14 @@
     <string name="internal_resolution_setting_8x">8x Native (3200x1920)</string>
     <string name="internal_resolution_setting_9x">9x Native (3600x2160)</string>
     <string name="internal_resolution_setting_10x">10x Native (4000x2400)</string>
+    <string name="internal_resolution_setting_11x">11x Native (4400x2640)</string>
+    <string name="internal_resolution_setting_12x">12x Native (4800x2880)</string>
+    <string name="internal_resolution_setting_13x">13x Native (5200x3120)</string>
+    <string name="internal_resolution_setting_14x">14x Native (5600x3360)</string>
+    <string name="internal_resolution_setting_15x">15x Native (6000x3600)</string>
+    <string name="internal_resolution_setting_16x">16x Native (6400x3840)</string>
+    <string name="internal_resolution_setting_17x">17x Native (6800x4080)</string>
+    <string name="internal_resolution_setting_18x">18x Native (7200x4320)</string>
     <string name="performance_warning">Turning off this setting will significantly reduce emulation performance! For the best experience, it is recommended that you leave this setting enabled.</string>
     <string name="debug_warning">Warning: Modifying these settings will slow emulation</string>
     <string name="stereoscopy">Stereoscopy</string>
@@ -388,6 +401,8 @@
     <!-- Debug settings strings -->
     <string name="cpu_jit">CPU JIT</string>
     <string name="cpu_jit_description">Uses the Just-in-Time (JIT) compiler for CPU emulation. When enabled, game performance will be significantly improved.</string>
+    <string name="use_fastinterp">Use Fast Interpreter</string>
+    <string name="use_fastinterp_description">When the CPU JIT is disabled, use the fast interpreter instead of the legacy interpreter. Restart required.</string>
     <string name="hw_shaders">Enable Hardware Shader</string>
     <string name="hw_shaders_description">Uses hardware to emulate 3DS shaders. When enabled, game performance will be significantly improved.</string>
     <string name="cpu_clock_speed">CPU Clock Speed</string>
@@ -397,6 +412,12 @@
     <string name="renderer_debug_description">Log additional graphics related debug information. When enabled, game performance will be significantly reduced.</string>
     <string name="instant_debug_log">Flush Log Output on Every Message</string>
     <string name="instant_debug_log_description">Immediately commits the debug log to file. Use this if Azahar crashes and the log output is being cut.</string>
+    <string name="prevent_frame_limiter_catch_up">Prevent Frame Limiter Speed-Up After Slow Frames</string>
+    <string name="prevent_frame_limiter_catch_up_description">Prevents emulation from running faster after a slow frame. When frames are consistently late, actual emulation speed may stay below the configured limit.</string>
+    <string name="mii_compatibility_fixes">Mii Compatibility Fixes</string>
+    <string name="mii_compatibility_fixes_description">Restores full shader precision and texture synchronization to address Mii face artifacts or editor crashes. This can reduce performance in Mii-heavy games. Restart Azahar after changing this setting.</string>
+    <string name="use_per_game_settings">Use Per-Game Settings</string>
+    <string name="use_per_game_settings_description">When enabled, this game uses and saves its own settings. When disabled, it uses and updates the global settings. Each game has its own switch.</string>
     <string name="delay_start_lle_modules">Delay Start With LLE Modules</string>
     <string name="delay_start_lle_modules_description">Delays the start of the app when LLE modules are enabled.</string>
     <string name="deterministic_async_operations">Deterministic Async Operations</string>
@@ -493,7 +514,7 @@
     <string name="loader_error_encrypted_description"><![CDATA[Azahar does not support encrypted applications. Read our <a href="https://azahar-emu.org/blog/game-loading-changes/">blog post</a> for more information.]]></string>
     <string name="loader_error_file_not_found">ROM file does not exist</string>
     <string name="no_game_present">No bootable game present!</string>
-
+    <string name="invalid_rom">Invalid ROM</string>
     <string name="loader_error_generic">An error occurred while loading ROM: \"%s (%d)\"</string>
     <string name="core_error_success">Success</string>
     <string name="core_error_not_initialized">Not initialized</string>
@@ -510,7 +531,7 @@
     <string name="core_error_artic_disconnected">Artic Base disconnected</string>
     <string name="core_error_n3ds_application">File is New 3DS application</string>
     <string name="core_error_core_exception_raised">Core exception raised</string>
-    <string name="core_error_memory_exception_raised">Memory exception raised</string>
+    <string name="core_error_savestate_build_mismatch">Savestate version mismatch</string>
     <string name="core_error_shutdown_requested">Shutdown requested</string>
     <string name="core_error_unknown">Unknown error</string>
 
@@ -669,6 +690,7 @@
     <string name="unsupported_encrypted">Unsupported encrypted application</string>
     <string name="invalid_system_mode">Invalid system mode</string>
     <string name="invalid_system_mode_message">New 3DS exclusive applications cannot be loaded without enabling the New 3DS mode.</string>
+    <string name="savestate_build_mismatch_message"><![CDATA[Could not load savestate because it was created on a different Azahar version:<br/><b>Azahar %1$s</b>.<br/><br/>Please read our blog entry <a href="https://azahar-emu.org/blog/understanding-save-states/">understanding savestates</a> for more information.<br/><br/>To recover your progress, downgrade to <b>Azahar %1$s</b>, load this savestate and use the application\'s built-in save functionality.]]></string>
 
     <!-- Disk Shader Cache -->
     <string name="preparing_shaders">Preparing Shaders</string>
@@ -697,9 +719,11 @@
     <string name="create_shortcut">Create Shortcut</string>
     <string name="shortcut_name_empty">Shortcut name cannot be empty</string>
     <string name="shortcut_image_stretch_toggle">Stretch to fit image</string>
+    <string name="game_context_region">Region:</string>
     <string name="game_context_id">ID:</string>
     <string name="game_context_file">File:</string>
     <string name="game_context_type">Type:</string>
+    <string name="game_context_playtime">Playtime:</string>
     <string name="game_context_insert">Insert Cartridge</string>
     <string name="game_context_eject">Eject Cartridge</string>
 
@@ -764,7 +788,7 @@
     <string name="cia_install_error_unknown">An unknown error occurred while installing \"%s\".\n Please see the log for more details</string>
 
     <!-- Memory Sizes -->
-    <string name="memory_formatted">%1$s %2$s</string>
+    <string name="memory_formatted" translatable="false">%1$s %2$s</string>
     <string name="memory_byte">Byte</string>
     <string name="memory_byte_shorthand">B</string>
     <string name="memory_kilobyte">KB</string>
@@ -792,14 +816,14 @@
     <string name="use_black_backgrounds">Black Backgrounds</string>
     <string name="use_black_backgrounds_description">When using the dark theme, apply black backgrounds.</string>
 
-    <!-- Region names -->
-    <string name="system_region_jpn">JPN</string>
-    <string name="system_region_usa">USA</string>
-    <string name="system_region_eur">EUR</string>
-    <string name="system_region_aus">AUS</string>
-    <string name="system_region_chn">CHN</string>
-    <string name="system_region_kor">KOR</string>
-    <string name="system_region_twn">TWN</string>
+    <!-- Region codes -->
+    <string name="system_region_jpn" translatable="false">JPN</string>
+    <string name="system_region_usa" translatable="false">USA</string>
+    <string name="system_region_eur" translatable="false">EUR</string>
+    <string name="system_region_aus" translatable="false">AUS</string>
+    <string name="system_region_chn" translatable="false">CHN</string>
+    <string name="system_region_kor" translatable="false">KOR</string>
+    <string name="system_region_twn" translatable="false">TWN</string>
 
     <!-- Language names -->
     <string name="language_japanese">Japanese (日本語)</string>
@@ -842,15 +866,15 @@
     <string name="reverse_interlaced">Reverse Interlaced</string>
 
     <!-- Graphics API names -->
-    <string name="opengles">OpenGLES</string>
-    <string name="vulkan">Vulkan</string>
+    <string name="opengles" translatable="false">OpenGLES</string>
+    <string name="vulkan" translatable="false">Vulkan</string>
 
     <!-- Texture filter names -->
-    <string name="anime4k">Anime4K</string>
-    <string name="bicubic">Bicubic</string>
-    <string name="scaleforce">ScaleForce</string>
-    <string name="xbrz">xBRZ</string>
-    <string name="mmpx">MMPX</string>
+    <string name="anime4k" translatable="false">Anime4K</string>
+    <string name="bicubic" translatable="false">Bicubic</string>
+    <string name="scaleforce" translatable="false">ScaleForce</string>
+    <string name="xbrz" translatable="false">xBRZ</string>
+    <string name="mmpx" translatable="false">MMPX</string>
 
     <!-- Texture Sampling names -->
     <string name="game_controlled">Game Controlled</string>
@@ -997,6 +1021,14 @@
     <string name="vatican_city">Vatican City</string>
     <string name="bermuda">Bermuda</string>
 
+    <!-- Regions (Japan, Australia, China and Taiwan are above) -->
+    <string name="north_america">North America</string>
+    <string name="europe">Europe</string>
+    <string name="korea">Korea</string>
+    <string name="region_free">Region free</string>
+    <string name="invalid_region">Invalid region</string>
+    <string name="region_get_error">ERROR PLEASE REPORT</string>
+
     <!-- Months -->
     <string name="january">January</string>
     <string name="february">February</string>
@@ -1097,7 +1129,7 @@
     <string name="multiplayer_room_browser">Public Rooms</string>
     <string name="multiplayer_no_rooms_found">No public rooms found</string>
     <string name="multiplayer_password_required">Password Required</string>
-    <string name="multiplayer_player_count">: %1$d/%2$d</string>
+    <string name="multiplayer_player_count" translatable="false">: %1$d/%2$d</string>
     <string name="multiplayer_game">Game</string>
     <string name="multiplayer_no_game_info">Any Game</string>
     <string name="multiplayer_password_protected">Password protected room</string>

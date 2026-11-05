@@ -1,11 +1,12 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2014-2026 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 #pragma once
 
 #include <memory>
 #include <string>
+#include "common/common_types.h"
 #include "common/settings.h"
 
 class INIReader;
@@ -14,12 +15,13 @@ class Config {
 private:
     std::unique_ptr<INIReader> android_config;
     std::string android_config_loc;
+    u64 program_id{};
 
     bool LoadINI(const std::string& default_contents = "", bool retry = true);
     void ReadValues();
 
 public:
-    Config();
+    explicit Config(u64 program_id = 0);
     ~Config();
 
     void Reload();

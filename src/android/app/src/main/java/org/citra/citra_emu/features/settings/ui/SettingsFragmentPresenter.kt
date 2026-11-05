@@ -1,6 +1,6 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2023-2026 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 package org.citra.citra_emu.features.settings.ui
 
@@ -130,6 +130,26 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
         }
         settingsList = sl
         fragmentView.showSettingsList(settingsList!!)
+    }
+
+    fun onPerGameSettingsChanged() {
+        if (TextUtils.isEmpty(gameId)) {
+            return
+        }
+        if (!SettingsFile.saveCustomGameSetting(gameId, BooleanSetting.USE_PER_GAME_SETTINGS)) {
+            fragmentView.showToastMessage(
+                CitraApplication.appContext.getString(
+                    R.string.error_saving,
+                    gameId,
+                    "Could not write the per-game settings file"
+                ),
+                true
+            )
+            return
+        }
+
+        settings.loadSettings(gameId, settingsActivity)
+        loadSettingsList()
     }
 
     /** Returns the portrait mode width */
@@ -1190,6 +1210,17 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
             add(HeaderSetting(R.string.advanced))
             add(
                 SingleChoiceSetting(
+                    IntSetting.FRAME_SKIP_MODE,
+                    R.string.frame_skip_mode,
+                    R.string.frame_skip_mode_description,
+                    R.array.frameSkipModeNames,
+                    R.array.frameSkipModeValues,
+                    IntSetting.FRAME_SKIP_MODE.key,
+                    IntSetting.FRAME_SKIP_MODE.defaultValue
+                )
+            )
+            add(
+                SingleChoiceSetting(
                     IntSetting.TEXTURE_SAMPLING,
                     R.string.texture_sampling_name,
                     R.string.texture_sampling_description,
@@ -1892,6 +1923,17 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
         settingsActivity.setToolbarTitle(settingsActivity.getString(R.string.preferences_debug))
         sl.apply {
             add(HeaderSetting(R.string.debug_warning))
+            if (!TextUtils.isEmpty(gameId)) {
+                add(
+                    SwitchSetting(
+                        BooleanSetting.USE_PER_GAME_SETTINGS,
+                        R.string.use_per_game_settings,
+                        R.string.use_per_game_settings_description,
+                        BooleanSetting.USE_PER_GAME_SETTINGS.key,
+                        BooleanSetting.USE_PER_GAME_SETTINGS.defaultValue
+                    )
+                )
+            }
             add(
                 SliderSetting(
                     IntSetting.CPU_CLOCK_SPEED,
@@ -1911,6 +1953,15 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.cpu_jit_description,
                     BooleanSetting.CPU_JIT.key,
                     BooleanSetting.CPU_JIT.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.USE_FASTINTERP,
+                    R.string.use_fastinterp,
+                    R.string.use_fastinterp_description,
+                    BooleanSetting.USE_FASTINTERP.key,
+                    BooleanSetting.USE_FASTINTERP.defaultValue
                 )
             )
             add(
@@ -1965,6 +2016,24 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.instant_debug_log_description,
                     BooleanSetting.INSTANT_DEBUG_LOG.key,
                     BooleanSetting.INSTANT_DEBUG_LOG.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.PREVENT_FRAME_LIMITER_CATCH_UP,
+                    R.string.prevent_frame_limiter_catch_up,
+                    R.string.prevent_frame_limiter_catch_up_description,
+                    BooleanSetting.PREVENT_FRAME_LIMITER_CATCH_UP.key,
+                    BooleanSetting.PREVENT_FRAME_LIMITER_CATCH_UP.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.MII_COMPATIBILITY_FIXES,
+                    R.string.mii_compatibility_fixes,
+                    R.string.mii_compatibility_fixes_description,
+                    BooleanSetting.MII_COMPATIBILITY_FIXES.key,
+                    BooleanSetting.MII_COMPATIBILITY_FIXES.defaultValue
                 )
             )
             add(

@@ -1,8 +1,9 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2023-2026 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 #include "video_core/shader/generator/glsl_fs_shader_gen.h"
+#include "common/settings.h"
 
 namespace Pica::Shader::Generator::GLSL {
 
@@ -36,8 +37,17 @@ static bool IsPassThroughTevStage(const Pica::TexturingRegs::TevStageConfig& sta
             stage.GetColorMultiplier() == 1 && stage.GetAlphaMultiplier() == 1);
 }
 
-// High precision may or may not be supported in GLES3. If it isn't, use medium precision instead.
+// AGY OPTIMIZATION: Use mediump precision on GLES to utilize Mali Bifrost FP16 dual ALUs (2x throughput)
 static constexpr char fragment_shader_precision_OES[] = R"(
+#if GL_ES
+precision mediump int;
+precision mediump float;
+precision mediump samplerBuffer;
+precision mediump uimage2D;
+#endif
+)";
+
+static constexpr char fragment_shader_precision_OES_mii_compat[] = R"(
 #if GL_ES
 #ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp int;
@@ -1260,7 +1270,9 @@ void FragmentModule::DefineExtensions() {
     }
 
     if (!profile.is_vulkan) {
-        out += fragment_shader_precision_OES;
+        out += Settings::values.mii_compatibility_fixes.GetValue()
+                   ? fragment_shader_precision_OES_mii_compat
+                   : fragment_shader_precision_OES;
     }
 }
 

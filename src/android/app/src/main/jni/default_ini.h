@@ -1,6 +1,6 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2014-2026 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 #pragma once
 
@@ -33,9 +33,9 @@ constexpr std::array android_config_omitted_keys = {
     Settings::Keys::audio_encoder,
     Settings::Keys::audio_encoder_options,
     Settings::Keys::audio_bitrate,
-    Settings::Keys::last_artic_base_addr, // On Android, this value is stored as a "preference"
-    Settings::Keys::break_on_unmapped_memory_access, // Does nothing as the error is ignored
-    Settings::Keys::use_gdbstub, // GDB functionality disabled by deafult on Android
+    Settings::Keys::last_artic_base_addr,     // On Android, this value is stored as a "preference"
+    Settings::Keys::enable_exception_handler, // Does nothing as the error is ignored
+    Settings::Keys::use_gdbstub,              // GDB functionality disabled by deafult on Android
     Settings::Keys::gdbstub_port,
 };
 
@@ -86,6 +86,11 @@ static const char* android_config_default_file_content = (BOOST_HANA_STRING(R"(
 # 0: Interpreter (slow), 1 (default): JIT (fast)
 )") DECLARE_KEY(use_cpu_jit) BOOST_HANA_STRING(R"(
 
+[Core]
+# Whether to use the fast interpreter or the legacy interpreter when JIT is disabled
+# 0: Legacy, 1 (default): Fast
+)") DECLARE_KEY(use_fastinterp) BOOST_HANA_STRING(R"(
+
 # Change the Clock Frequency of the emulated 3DS CPU.
 # Underclocking can increase the performance of the game at the risk of freezing.
 # Overclocking may fix lag that happens on console, but also comes with the risk of freezing.
@@ -134,6 +139,10 @@ static const char* android_config_default_file_content = (BOOST_HANA_STRING(R"(
 # Skips display of duplicated frames in 30 fps games
 # 0: Off, 1 (default): On
 )") DECLARE_KEY(use_skip_duplicate_frames) BOOST_HANA_STRING(R"(
+
+# Draw every emulated frame or skip only rendering/presentation for selected frames
+# 0 (default): Normal, 1: Draw every other frame, 2: Draw one frame in three
+)") DECLARE_KEY(frame_skip_mode) BOOST_HANA_STRING(R"(
 
 # Reduce stuttering by storing and loading generated shaders to disk
 # 0: Off, 1 (default. On)
@@ -574,6 +583,19 @@ static const char* android_config_default_file_content = (BOOST_HANA_STRING(R"(
 # Enables toggling the unique data console type (Old 3DS <-> New 3DS) to be able to download the opposite system firmware type from system settings.
 # 0 (default): Off, 1: On
 )") DECLARE_KEY(toggle_unique_data_console_type) BOOST_HANA_STRING(R"(
+
+# Enables full shader precision and CPU texture synchronization for Mii compatibility.
+# May reduce performance in Mii-heavy games. Restart required.
+# 0 (default): Off, 1: On
+)") DECLARE_KEY(mii_compatibility_fixes) BOOST_HANA_STRING(R"(
+
+# Save settings changed from a running game to a game-specific config file
+# 0 (default): Off, 1: On
+)") DECLARE_KEY(use_per_game_settings) BOOST_HANA_STRING(R"(
+
+# Prevent frame limiter catch-up after slow frames
+# 0 (default): Off, 1: On
+)") DECLARE_KEY(prevent_frame_limiter_catch_up) BOOST_HANA_STRING(R"(
 
 # Delay the start of apps when LLE modules are enabled
 # 0: Off, 1 (default): On

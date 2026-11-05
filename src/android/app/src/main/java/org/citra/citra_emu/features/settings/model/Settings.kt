@@ -1,6 +1,6 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2023-2026 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 package org.citra.citra_emu.features.settings.model
 
@@ -40,9 +40,35 @@ class Settings {
 
     fun loadSettings(view: SettingsActivityView? = null) {
         sections = SettingsSectionMap()
+        // Clear values left by a previous game's overrides before loading the global baseline.
+        BooleanSetting.clear()
+        FloatSetting.clear()
+        ScaledFloatSetting.clear()
+        IntSetting.clear()
+        IntListSetting.clear()
+        StringSetting.clear()
         loadCitraSettings(view)
         if (!TextUtils.isEmpty(gameId)) {
-            loadCustomGameSettings(gameId!!, view)
+            val legacyGlobalValue = BooleanSetting.USE_PER_GAME_SETTINGS.boolean
+            val gameSections = SettingsFile.readCustomGameSettings(gameId!!, view)
+            val customDebugSection = gameSections.entries
+                .firstOrNull { it.key == SECTION_DEBUG }
+                ?.value
+            val gameToggle = customDebugSection?.getSetting(BooleanSetting.USE_PER_GAME_SETTINGS.key)
+                as? AbstractBooleanSetting
+            val useGameSettings = gameToggle?.boolean
+                ?: (legacyGlobalValue && gameSections.isNotEmpty())
+
+            BooleanSetting.USE_PER_GAME_SETTINGS.boolean = useGameSettings
+            if (gameToggle == null && useGameSettings) {
+                // Migrate existing per-game files created while the old global switch was on.
+                SettingsFile.saveCustomGameSetting(gameId!!, BooleanSetting.USE_PER_GAME_SETTINGS)
+            }
+            if (useGameSettings) {
+                mergeSections(gameSections)
+            } else {
+                sections[SECTION_DEBUG]!!.putSetting(BooleanSetting.USE_PER_GAME_SETTINGS)
+            }
         }
         isLoaded = true
     }
@@ -51,11 +77,6 @@ class Settings {
         for ((fileName) in configFileSectionsMap) {
             sections.putAll(SettingsFile.readFile(fileName, view))
         }
-    }
-
-    private fun loadCustomGameSettings(gameId: String, view: SettingsActivityView?) {
-        // Custom game settings
-        mergeSections(SettingsFile.readCustomGameSettings(gameId, view))
     }
 
     private fun mergeSections(updatedSections: HashMap<String, SettingSection?>) {
@@ -76,24 +97,53 @@ class Settings {
 
     fun saveSettings(view: SettingsActivityView) {
         if (TextUtils.isEmpty(gameId)) {
-            view.showToastMessage(
-                CitraApplication.appContext.getString(R.string.ini_saved),
-                false
-            )
-            for ((fileName, sectionNames) in configFileSectionsMap.entries) {
-                val iniSections = TreeMap<String, SettingSection?>()
-                for (section in sectionNames) {
-                    iniSections[section] = sections[section]
-                }
-                SettingsFile.saveFile(fileName, iniSections, view)
-            }
+            saveGlobalSettings(view)
         } else {
-            // TODO: Implement per game settings
+            if (BooleanSetting.USE_PER_GAME_SETTINGS.boolean) {
+                val gameSections = TreeMap<String, SettingSection?>()
+                for (sectionName in configFileSectionsMap[SettingsFile.FILE_NAME_CONFIG].orEmpty()) {
+                    val original = sections[sectionName] ?: continue
+                    val gameSection = SettingSection(sectionName)
+                    for (setting in original.settings.values) {
+                        gameSection.putSetting(setting)
+                    }
+                    gameSections[sectionName] = gameSection
+                }
+                SettingsFile.saveCustomGameSettings(gameId!!, gameSections, view)
+            } else {
+                saveGlobalSettings(view)
+            }
+        }
+    }
+
+    private fun saveGlobalSettings(view: SettingsActivityView) {
+        view.showToastMessage(CitraApplication.appContext.getString(R.string.ini_saved), false)
+        for ((fileName, sectionNames) in configFileSectionsMap.entries) {
+            val iniSections = TreeMap<String, SettingSection?>()
+            for (section in sectionNames) {
+                val original = sections[section]
+                if (section == SECTION_DEBUG && original != null) {
+                    val globalSection = SettingSection(section)
+                    for (setting in original.settings.values) {
+                        if (setting.key != BooleanSetting.USE_PER_GAME_SETTINGS.key) {
+                            globalSection.putSetting(setting)
+                        }
+                    }
+                    iniSections[section] = globalSection
+                } else {
+                    iniSections[section] = original
+                }
+            }
+            SettingsFile.saveFile(fileName, iniSections, view)
         }
     }
 
     fun saveSetting(setting: AbstractSetting, filename: String) {
-        SettingsFile.saveFile(filename, setting)
+        if (!TextUtils.isEmpty(gameId) && BooleanSetting.USE_PER_GAME_SETTINGS.boolean) {
+            SettingsFile.saveCustomGameSetting(gameId!!, setting)
+        } else {
+            SettingsFile.saveFile(filename, setting)
+        }
     }
 
     companion object {

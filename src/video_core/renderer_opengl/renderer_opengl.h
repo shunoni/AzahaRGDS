@@ -1,6 +1,6 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2014-2026 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 #pragma once
 
@@ -50,7 +50,8 @@ public:
     }
 
     void SwapBuffers() override;
-    void TryPresent(int timeout_ms, bool is_secondary) override;
+    void OnSkippedFrame() override;
+    bool TryPresent(int timeout_ms, bool is_secondary) override;
     void PrepareVideoDumping() override;
     void CleanupVideoDumping() override;
 

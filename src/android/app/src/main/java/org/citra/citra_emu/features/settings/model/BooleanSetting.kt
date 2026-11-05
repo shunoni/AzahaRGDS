@@ -1,6 +1,6 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2023-2026 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 package org.citra.citra_emu.features.settings.model
 
@@ -19,6 +19,13 @@ enum class BooleanSetting(
     ALLOW_PLUGIN_LOADER(SettingKeys.allow_plugin_loader(), Settings.SECTION_SYSTEM, true),
     SWAP_SCREEN(SettingKeys.swap_screen(), Settings.SECTION_LAYOUT, false),
     INSTANT_DEBUG_LOG(SettingKeys.instant_debug_log(), Settings.SECTION_DEBUG, false),
+    PREVENT_FRAME_LIMITER_CATCH_UP(
+        SettingKeys.prevent_frame_limiter_catch_up(),
+        Settings.SECTION_DEBUG,
+        false
+    ),
+    MII_COMPATIBILITY_FIXES(SettingKeys.mii_compatibility_fixes(), Settings.SECTION_DEBUG, false),
+    USE_PER_GAME_SETTINGS(SettingKeys.use_per_game_settings(), Settings.SECTION_DEBUG, false),
     ENABLE_RPC_SERVER(SettingKeys.enable_rpc_server(), Settings.SECTION_DEBUG, false),
     TOGGLE_UNIQUE_DATA_CONSOLE_TYPE(
         SettingKeys.toggle_unique_data_console_type(),
@@ -94,13 +101,14 @@ enum class BooleanSetting(
         false
     ),
     CPU_JIT(SettingKeys.use_cpu_jit(), Settings.SECTION_CORE, true),
+    USE_FASTINTERP(SettingKeys.use_fastinterp(), Settings.SECTION_CORE, true),
     HW_SHADER(SettingKeys.use_hw_shader(), Settings.SECTION_RENDERER, true),
     SHADER_JIT(SettingKeys.use_shader_jit(), Settings.SECTION_RENDERER, true),
     VSYNC(SettingKeys.use_vsync(), Settings.SECTION_RENDERER, false),
     USE_SKIP_DUPLICATE_FRAMES(
         SettingKeys.use_skip_duplicate_frames(),
         Settings.SECTION_RENDERER,
-        true
+        false
     ),
     USE_FRAME_LIMIT(SettingKeys.use_frame_limit(), Settings.SECTION_RENDERER, true),
     DEBUG_RENDERER(SettingKeys.renderer_debug(), Settings.SECTION_DEBUG, false),
@@ -160,7 +168,9 @@ enum class BooleanSetting(
             TOGGLE_UNIQUE_DATA_CONSOLE_TYPE,
             VSYNC,
             DEBUG_RENDERER,
+            MII_COMPATIBILITY_FIXES,
             CPU_JIT,
+            USE_FASTINTERP,
             ASYNC_CUSTOM_LOADING,
             SHADERS_ACCURATE_MUL,
             USE_ARTIC_BASE_CONTROLLER,
@@ -168,7 +178,8 @@ enum class BooleanSetting(
             ASYNC_FS_OPERATIONS,
             ANDROID_HIDE_IMAGES,
             PERF_OVERLAY_ENABLE, // Works in overlay options, but not from the settings menu
-            APPLY_REGION_FREE_PATCH
+            APPLY_REGION_FREE_PATCH,
+            EXPAND_TO_CUTOUT_AREA
         )
 
         fun from(key: String): BooleanSetting? =

@@ -1,6 +1,6 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2023-2026 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 package org.citra.citra_emu.fragments
 
@@ -41,7 +41,6 @@ import android.widget.Toast.LENGTH_LONG
 import androidx.activity.OnBackPressedCallback
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.get
@@ -76,7 +75,6 @@ import org.citra.citra_emu.display.SecondaryDisplayLayout
 import org.citra.citra_emu.features.hotkeys.Hotkey
 import org.citra.citra_emu.features.settings.model.BooleanSetting
 import org.citra.citra_emu.features.settings.model.IntSetting
-import org.citra.citra_emu.features.settings.model.SettingsViewModel
 import org.citra.citra_emu.features.settings.ui.SettingsActivity
 import org.citra.citra_emu.features.settings.utils.SettingsFile
 import org.citra.citra_emu.model.Game
@@ -117,9 +115,6 @@ class EmulationFragment :
     private lateinit var screenAdjustmentUtil: ScreenAdjustmentUtil
 
     private val emulationViewModel: EmulationViewModel by activityViewModels()
-    private val settingsViewModel: SettingsViewModel by viewModels()
-    private val settings get() = settingsViewModel.settings
-
     private val onPause = Runnable { togglePause() }
     private val onShutdown = Runnable { emulationState.stop() }
 
@@ -209,7 +204,7 @@ class EmulationFragment :
         retainInstance = true
         emulationState = EmulationState(game.path)
         screenAdjustmentUtil =
-            ScreenAdjustmentUtil(requireContext(), requireActivity().windowManager, settings)
+            ScreenAdjustmentUtil(requireContext(), requireActivity().windowManager)
         EmulationLifecycleUtil.addPauseResumeHook(onPause)
         EmulationLifecycleUtil.addShutdownHook(onShutdown)
     }
@@ -412,10 +407,11 @@ class EmulationFragment :
                 }
 
                 R.id.menu_settings -> {
+                    val gameId = String.format("%016X", NativeLibrary.getRunningTitleId())
                     SettingsActivity.launch(
                         requireContext(),
                         SettingsFile.FILE_NAME_CONFIG,
-                        ""
+                        gameId
                     )
 
                     true
@@ -769,10 +765,7 @@ class EmulationFragment :
                 R.id.menu_performance_overlay_show -> {
                     BooleanSetting.PERF_OVERLAY_ENABLE.boolean =
                         !BooleanSetting.PERF_OVERLAY_ENABLE.boolean
-                    settings.saveSetting(
-                        BooleanSetting.PERF_OVERLAY_ENABLE,
-                        SettingsFile.FILE_NAME_CONFIG
-                    )
+                    SettingsFile.saveCurrentGameSetting(BooleanSetting.PERF_OVERLAY_ENABLE)
                     updateShowPerformanceOverlay()
                     true
                 }
@@ -1712,23 +1705,31 @@ class EmulationFragment :
         NativeLibrary.doFrame()
     }
 
-    private fun setInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(
-            binding.inGameMenu
-        ) { v: View, windowInsets: WindowInsetsCompat ->
-            val cutInsets: Insets = windowInsets.getInsets(WindowInsetsCompat.Type.displayCutout())
-            var left = 0
-            var right = 0
-            if (ViewCompat.getLayoutDirection(v) == ViewCompat.LAYOUT_DIRECTION_LTR) {
-                left = cutInsets.left
-            } else {
-                right = cutInsets.right
-            }
-
-            v.setPadding(left, cutInsets.top, right, 0)
-
+    private val applyCutoutInsets: (View, WindowInsetsCompat) -> WindowInsetsCompat = {
+            v,
             windowInsets
+        ->
+        val cutout = windowInsets.displayCutout
+        val mlp = v.layoutParams as ViewGroup.MarginLayoutParams?
+        mlp?.setMargins(
+            cutout?.safeInsetLeft ?: 0,
+            cutout?.safeInsetTop ?: 0,
+            cutout?.safeInsetRight ?: 0,
+            cutout?.safeInsetBottom ?: 0
+        )
+        windowInsets
+    }
+
+    private fun setInsets() {
+        if (!BooleanSetting.EXPAND_TO_CUTOUT_AREA.boolean) {
+            ViewCompat.setOnApplyWindowInsetsListener(binding.surfaceEmulation, applyCutoutInsets)
         }
+        ViewCompat.setOnApplyWindowInsetsListener(binding.surfaceInputOverlay, applyCutoutInsets)
+        ViewCompat.setOnApplyWindowInsetsListener(
+            binding.performanceOverlayShowText,
+            applyCutoutInsets
+        )
+        ViewCompat.setOnApplyWindowInsetsListener(binding.inGameMenu, applyCutoutInsets)
     }
 
     private class EmulationState(private val gamePath: String) {
@@ -1771,8 +1772,6 @@ class EmulationFragment :
                 state = State.PAUSED
                 Log.debug("[EmulationFragment] Pausing emulation.")
 
-                // Release the surface before pausing, since emulation has to be running for that.
-                NativeLibrary.surfaceDestroyed()
                 NativeLibrary.pauseEmulation()
                 NativeLibrary.playTimeManagerStop()
             } else {
@@ -1832,6 +1831,7 @@ class EmulationFragment :
                     }
 
                     State.PAUSED -> {
+                        NativeLibrary.surfaceDestroyed()
                         Log.warning("[EmulationFragment] Surface cleared while emulation paused.")
                     }
 

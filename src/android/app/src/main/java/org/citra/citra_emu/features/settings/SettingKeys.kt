@@ -1,6 +1,6 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2026 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 package org.citra.citra_emu.features.settings
 
@@ -11,6 +11,7 @@ object SettingKeys {
     // Shared
     external fun use_artic_base_controller(): String
     external fun use_cpu_jit(): String
+    external fun use_fastinterp(): String
     external fun cpu_clock_percentage(): String
     external fun is_new_3ds(): String
     external fun lle_applets(): String
@@ -40,6 +41,7 @@ object SettingKeys {
     external fun shaders_accurate_mul(): String
     external fun use_vsync(): String
     external fun use_skip_duplicate_frames(): String
+    external fun frame_skip_mode(): String
     external fun use_shader_jit(): String
     external fun resolution_factor(): String
     external fun frame_limit(): String
@@ -105,6 +107,9 @@ object SettingKeys {
     external fun use_gdbstub(): String
     external fun gdbstub_port(): String
     external fun instant_debug_log(): String
+    external fun prevent_frame_limiter_catch_up(): String
+    external fun mii_compatibility_fixes(): String
+    external fun use_per_game_settings(): String
     external fun enable_rpc_server(): String
     external fun toggle_unique_data_console_type(): String
     external fun log_filter(): String

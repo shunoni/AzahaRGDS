@@ -1,6 +1,6 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2023-2026 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 import android.databinding.tool.ext.capitalizeUS
 import de.undercouch.gradle.tasks.download.Download
@@ -20,7 +20,9 @@ plugins {
  * next 680 years.
  */
 val autoVersion = (((System.currentTimeMillis() / 1000) - 1451606400) / 10).toInt()
-val abiFilter = listOf("arm64-v8a", "x86_64")
+// Build only for the 64-bit ARM target used by the RG DS. The Cortex-A55 compiler
+// flags below are not valid for the x86_64 emulator ABI.
+val abiFilter = listOf("arm64-v8a")
 
 val downloadedJniLibsPath = "${layout.buildDirectory.get().asFile.path}/downloadedJniLibs"
 
@@ -60,10 +62,8 @@ android {
     }
 
     defaultConfig {
-        // The application ID refers to Lime3DS to allow for
-        // the Play Store listing, which was originally set up for Lime3DS, to still be used.
-        // applicationId = "org.azahar_emu.azahar"
-        applicationId = "io.github.lime3ds.android"
+        // Separate application ID so this custom optimized build can coexist alongside original Azahar/Lime3DS
+        applicationId = "io.github.azaharplus.rgds.turbo"
 
         minSdk = 28
         targetSdk = 35
@@ -83,7 +83,11 @@ android {
                     "-DANDROID_ARM_NEON=true", // cryptopp requires Neon to work
                     "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON", // Support Android 15 16KiB page
                     // sizes
-                    "-DENABLE_GDBSTUB=OFF" // Disable GDB stub
+                    "-DENABLE_GDBSTUB=OFF", // Disable GDB stub
+                    "-DENABLE_LTO=ON",
+                    "-DCMAKE_BUILD_TYPE=Release",
+                    "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -mcpu=cortex-a55 -mtune=cortex-a55 -fomit-frame-pointer -ffast-math -fno-stack-protector",
+                    "-DCMAKE_C_FLAGS_RELEASE=-O3 -mcpu=cortex-a55 -mtune=cortex-a55 -fomit-frame-pointer -ffast-math -fno-stack-protector"
                 )
             }
         }

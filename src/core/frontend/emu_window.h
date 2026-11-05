@@ -1,6 +1,6 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2014-2026 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 #pragma once
 
@@ -62,9 +62,8 @@ public:
     virtual void ReleaseRenderFrame(Frame* frame) = 0;
 
     /**
-     * Presentation thread calls this to get the latest frame available to present. If there is no
-     * frame available after timeout, returns the previous frame. If there is no previous frame it
-     * returns nullptr
+     * Presentation thread calls this to get a newly rendered frame. If there is no new frame
+     * available after timeout, returns nullptr and leaves the currently displayed image alone.
      */
     virtual Frontend::Frame* TryGetPresentFrame(int timeout_ms) = 0;
 };
@@ -334,17 +333,6 @@ private:
     }
 
     void CreateTouchState();
-
-    /**
-     * Check if the given x/y coordinates are within the touchpad specified by the framebuffer
-     * layout
-     * @param layout FramebufferLayout object describing the framebuffer size and screen positions
-     * @param framebuffer_x Framebuffer x-coordinate to check
-     * @param framebuffer_y Framebuffer y-coordinate to check
-     * @return True if the coordinates are within the touchpad, otherwise false
-     */
-    bool IsWithinTouchscreen(const Layout::FramebufferLayout& layout, unsigned framebuffer_x,
-                             unsigned framebuffer_y);
 
     Layout::FramebufferLayout framebuffer_layout; ///< Current framebuffer layout
 

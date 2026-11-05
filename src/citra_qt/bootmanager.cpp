@@ -1,6 +1,6 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2014-2026 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 #include <QApplication>
 #include <QHBoxLayout>
@@ -100,6 +100,8 @@ void EmuThread::run() {
         emit HideLoadingScreen();
         system.frame_limiter.WaitOnce();
     }
+
+    system.RegisterCoreLoopThreadId();
 
     // Holds whether the cpu was running during the last iteration,
     // so that the DebugModeLeft signal can be emitted before the
@@ -296,9 +298,10 @@ public:
         }
         context->MakeCurrent();
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-        system.GPU().Renderer().TryPresent(100, is_secondary);
-        context->SwapBuffers();
-        glFinish();
+        if (system.GPU().Renderer().TryPresent(100, is_secondary)) {
+            context->SwapBuffers();
+            glFinish();
+        }
     }
 
     void paintEvent(QPaintEvent* event) override {

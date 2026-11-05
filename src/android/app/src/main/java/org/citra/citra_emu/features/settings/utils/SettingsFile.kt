@@ -1,6 +1,6 @@
-// Copyright Citra Emulator Project / Azahar Emulator Project
+// Copyright 2023-2026 Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
-// Refer to the license.txt file included.
+// Refer to the misc/licenses/gplv2.txt file included.
 
 package org.citra.citra_emu.features.settings.utils
 
@@ -13,6 +13,7 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.util.TreeMap
 import org.citra.citra_emu.CitraApplication
+import org.citra.citra_emu.NativeLibrary
 import org.citra.citra_emu.R
 import org.citra.citra_emu.features.settings.model.AbstractSetting
 import org.citra.citra_emu.features.settings.model.BooleanSetting
@@ -105,7 +106,114 @@ object SettingsFile {
     fun readCustomGameSettings(
         gameId: String,
         view: SettingsActivityView?
-    ): HashMap<String, SettingSection?> = readFile(getCustomGameSettingsFile(gameId), true, view)
+    ): HashMap<String, SettingSection?> = getCustomGameSettingsFile(gameId, false)?.let {
+        readFile(it, true, view)
+    } ?: SettingsSectionMap()
+
+    fun saveCustomGameSettings(
+        gameId: String,
+        sections: TreeMap<String, SettingSection?>,
+        view: SettingsActivityView
+    ) {
+        val ini = getCustomGameSettingsFile(gameId, true)
+        if (ini == null) {
+            view.showToastMessage(
+                CitraApplication.appContext.getString(
+                    R.string.error_saving,
+                    gameId,
+                    "Could not create the GameSettings file"
+                ),
+                false
+            )
+            return
+        }
+
+        try {
+            val context: Context = CitraApplication.appContext
+            val inputStream = context.contentResolver.openInputStream(ini.uri)
+            val writer = Wini(inputStream)
+            for (section in sections.values) {
+                if (section != null) {
+                    writeSection(writer, section)
+                }
+            }
+            inputStream!!.close()
+            val outputStream = context.contentResolver.openOutputStream(ini.uri, "wt")
+            writer.store(outputStream)
+            outputStream!!.flush()
+            outputStream.close()
+            view.showToastMessage(CitraApplication.appContext.getString(R.string.ini_saved), false)
+        } catch (e: Exception) {
+            Log.error("[SettingsFile] Error saving game config $gameId.ini: ${e.message}")
+            view.showToastMessage(
+                CitraApplication.appContext.getString(R.string.error_saving, gameId, e.message),
+                false
+            )
+        }
+    }
+
+    fun saveCustomGameSetting(gameId: String, setting: AbstractSetting): Boolean {
+        val ini = getCustomGameSettingsFile(gameId, true) ?: return false
+        try {
+            val context: Context = CitraApplication.appContext
+            val inputStream = context.contentResolver.openInputStream(ini.uri)
+                ?: return false
+            val writer = inputStream.use { Wini(it) }
+            writer.put(mapSectionNameToIni(setting.section!!), setting.key, setting.valueAsString)
+            val outputStream = context.contentResolver.openOutputStream(ini.uri, "wt")
+                ?: return false
+            outputStream.use {
+                writer.store(it)
+                it.flush()
+            }
+            return true
+        } catch (e: Exception) {
+            Log.error("[SettingsFile] Error saving game config $gameId.ini: ${e.message}")
+            return false
+        }
+    }
+
+    fun saveCurrentGameSetting(setting: AbstractSetting, fileName: String = FILE_NAME_CONFIG) {
+        if (NativeLibrary.isRunning()) {
+            val gameId = String.format("%016X", NativeLibrary.getRunningTitleId())
+            if (isPerGameSettingsEnabled(gameId)) {
+                saveCustomGameSetting(gameId, setting)
+                return
+            }
+        }
+        saveFile(fileName, setting)
+    }
+
+    private fun isPerGameSettingsEnabled(gameId: String): Boolean {
+        val ini = getCustomGameSettingsFile(gameId, false) ?: return false
+        return try {
+            val inputStream = CitraApplication.appContext.contentResolver.openInputStream(ini.uri)
+                ?: return false
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                var inDebugSection = false
+                while (true) {
+                    val line = reader.readLine() ?: break
+                    val trimmedLine = line.trim()
+                    if (trimmedLine.startsWith("[") && trimmedLine.endsWith("]")) {
+                        inDebugSection = trimmedLine.substring(1, trimmedLine.length - 1)
+                            .equals("Debugging", ignoreCase = true)
+                    } else if (inDebugSection) {
+                        val separator = trimmedLine.indexOf('=')
+                        if (separator >= 0 && trimmedLine.substring(0, separator).trim()
+                                .equals(BooleanSetting.USE_PER_GAME_SETTINGS.key, ignoreCase = true)
+                        ) {
+                            return trimmedLine.substring(separator + 1).trim()
+                                .equals("true", ignoreCase = true)
+                        }
+                    }
+                }
+                false
+            }
+        } catch (e: Exception) {
+            Log.error("[SettingsFile] Error reading per-game mode for $gameId: ${e.message}")
+            false
+        }
+    }
 
     /**
      * Saves a Settings HashMap to a given .ini file on disk. If unsuccessful, outputs an error
@@ -182,10 +290,17 @@ object SettingsFile {
         return configDirectory!!.findFile("$fileName.ini")!!
     }
 
-    private fun getCustomGameSettingsFile(gameId: String): DocumentFile {
+    private fun getCustomGameSettingsFile(gameId: String, create: Boolean): DocumentFile? {
         val root = DocumentFile.fromTreeUri(CitraApplication.appContext, Uri.parse(userDirectory))
-        val configDirectory = root!!.findFile("GameSettings")
-        return configDirectory!!.findFile("$gameId.ini")!!
+            ?: return null
+        val directory = root.findFile("GameSettings") ?: run {
+            if (!create) {
+                return null
+            }
+            root.createDirectory("GameSettings") ?: return null
+        }
+        return directory.findFile("$gameId.ini")
+            ?: if (create) directory.createFile("text/plain", "$gameId.ini") else null
     }
 
     private fun sectionFromLine(line: String, isCustomGame: Boolean): SettingSection {
@@ -264,7 +379,7 @@ object SettingsFile {
      */
     private fun writeSection(parser: Wini, section: SettingSection) {
         // Write the section header.
-        val header = section.name
+        val header = mapSectionNameToIni(section.name)
 
         // Write this section's values.
         val settings = section.settings
