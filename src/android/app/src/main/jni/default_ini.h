@@ -613,6 +613,32 @@ static const char* android_config_default_file_content = (BOOST_HANA_STRING(R"(
 # 0: Off, 1 (default): On
 )") DECLARE_KEY(fast_shader_precision) BOOST_HANA_STRING(R"(
 
+# Skip GPU->CPU texture readbacks entirely. Drastically faster but breaks anything
+# that reads rendered output from the CPU (screenshots, some effects, texture uploads).
+# 0: Off, 1 (default): On
+)") DECLARE_KEY(unsafe_skip_texture_flush) BOOST_HANA_STRING(R"(
+
+# Skip OpenGL fences and memory barriers used for cross-frame synchronization.
+# Reduces GPU stalls at the cost of tearing and graphical corruption.
+# 0: Off, 1 (default): On
+)") DECLARE_KEY(unsafe_skip_gpu_sync) BOOST_HANA_STRING(R"(
+
+# Skip GPU mipmap generation. Faster on low-end GPUs but causes shimmering and
+# incorrect sampling of scaled/filtered textures.
+# 0: Off, 1 (default): On
+)") DECLARE_KEY(unsafe_skip_mipmaps) BOOST_HANA_STRING(R"(
+
+# Use approximate reciprocal/square-root and skip 0*inf NaN sanitization in the
+# AArch64 shader JIT. Much faster shader code on weak CPUs with lower accuracy.
+# Restart required.
+# 0: Off, 1 (default): On
+)") DECLARE_KEY(unsafe_fast_shader_math) BOOST_HANA_STRING(R"(
+
+# Skip marking pages as rasterizer-cached, avoiding page table churn. CPU and GPU
+# memory are no longer kept coherent, which can cause stale textures. Restart required.
+# 0: Off, 1 (default): On
+)") DECLARE_KEY(unsafe_skip_page_marking) BOOST_HANA_STRING(R"(
+
 # Delay the start of apps when LLE modules are enabled
 # 0: Off, 1 (default): On
 )") DECLARE_KEY(delay_start_for_lle_modules) BOOST_HANA_STRING(R"(

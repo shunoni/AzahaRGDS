@@ -989,6 +989,12 @@ void MemorySystem::RasterizerMarkRegionCached(PAddr start, u32 size, bool cached
         return;
     }
 
+    // AGY SPEED OPTIMIZATION: Avoid marking pages as rasterizer-cached. This trades
+    // CPU/GPU memory coherence for a large reduction in page table churn.
+    if (Settings::values.unsafe_skip_page_marking.GetValue()) {
+        return;
+    }
+
     u32 num_pages = ((start + size - 1) >> CITRA_PAGE_BITS) - (start >> CITRA_PAGE_BITS) + 1;
     PAddr paddr = start;
 

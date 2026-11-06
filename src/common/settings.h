@@ -665,6 +665,11 @@ struct Values {
     Setting<bool> skip_slow_draw_fallback{true, Keys::skip_slow_draw_fallback};
     Setting<bool> fast_texture_invalidation{true, Keys::fast_texture_invalidation};
     Setting<bool> fast_shader_precision{true, Keys::fast_shader_precision};
+    Setting<bool> unsafe_skip_texture_flush{true, Keys::unsafe_skip_texture_flush};
+    Setting<bool> unsafe_skip_gpu_sync{true, Keys::unsafe_skip_gpu_sync};
+    Setting<bool> unsafe_skip_mipmaps{true, Keys::unsafe_skip_mipmaps};
+    Setting<bool> unsafe_fast_shader_math{true, Keys::unsafe_fast_shader_math};
+    Setting<bool> unsafe_skip_page_marking{true, Keys::unsafe_skip_page_marking};
 
     // WebService
     Setting<std::string> web_api_url{"http://88.198.47.46:5000", Keys::web_api_url};

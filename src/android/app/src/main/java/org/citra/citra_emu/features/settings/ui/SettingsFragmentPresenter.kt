@@ -2067,6 +2067,51 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
             )
             add(
                 SwitchSetting(
+                    BooleanSetting.UNSAFE_SKIP_TEXTURE_FLUSH,
+                    R.string.unsafe_skip_texture_flush,
+                    R.string.unsafe_skip_texture_flush_description,
+                    BooleanSetting.UNSAFE_SKIP_TEXTURE_FLUSH.key,
+                    BooleanSetting.UNSAFE_SKIP_TEXTURE_FLUSH.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.UNSAFE_SKIP_GPU_SYNC,
+                    R.string.unsafe_skip_gpu_sync,
+                    R.string.unsafe_skip_gpu_sync_description,
+                    BooleanSetting.UNSAFE_SKIP_GPU_SYNC.key,
+                    BooleanSetting.UNSAFE_SKIP_GPU_SYNC.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.UNSAFE_SKIP_MIPMAPS,
+                    R.string.unsafe_skip_mipmaps,
+                    R.string.unsafe_skip_mipmaps_description,
+                    BooleanSetting.UNSAFE_SKIP_MIPMAPS.key,
+                    BooleanSetting.UNSAFE_SKIP_MIPMAPS.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.UNSAFE_FAST_SHADER_MATH,
+                    R.string.unsafe_fast_shader_math,
+                    R.string.unsafe_fast_shader_math_description,
+                    BooleanSetting.UNSAFE_FAST_SHADER_MATH.key,
+                    BooleanSetting.UNSAFE_FAST_SHADER_MATH.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.UNSAFE_SKIP_PAGE_MARKING,
+                    R.string.unsafe_skip_page_marking,
+                    R.string.unsafe_skip_page_marking_description,
+                    BooleanSetting.UNSAFE_SKIP_PAGE_MARKING.key,
+                    BooleanSetting.UNSAFE_SKIP_PAGE_MARKING.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
                     BooleanSetting.MII_COMPATIBILITY_FIXES,
                     R.string.mii_compatibility_fixes,
                     R.string.mii_compatibility_fixes_description,

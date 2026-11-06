@@ -183,6 +183,11 @@ void LogSettings() {
     log_setting("Debugging_FastTextureInvalidation",
                 values.fast_texture_invalidation.GetValue());
     log_setting("Debugging_FastShaderPrecision", values.fast_shader_precision.GetValue());
+    log_setting("Debugging_UnsafeSkipTextureFlush", values.unsafe_skip_texture_flush.GetValue());
+    log_setting("Debugging_UnsafeSkipGpuSync", values.unsafe_skip_gpu_sync.GetValue());
+    log_setting("Debugging_UnsafeSkipMipmaps", values.unsafe_skip_mipmaps.GetValue());
+    log_setting("Debugging_UnsafeFastShaderMath", values.unsafe_fast_shader_math.GetValue());
+    log_setting("Debugging_UnsafeSkipPageMarking", values.unsafe_skip_page_marking.GetValue());
 }
 
 bool IsConfiguringGlobal() {
