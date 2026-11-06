@@ -132,10 +132,17 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
         fragmentView.showSettingsList(settingsList!!)
     }
 
-    fun onPerGameSettingsChanged() {
+    fun onPerGameSettingsChanged(enabled: Boolean) {
         if (TextUtils.isEmpty(gameId)) {
             return
         }
+
+        // Keep the in-memory state authoritative while the UI updates. The per-game
+        // file can be momentarily unreadable right after being created via SAF.
+        BooleanSetting.USE_PER_GAME_SETTINGS.boolean = enabled
+        settings.getSection(Settings.SECTION_DEBUG)
+            ?.putSetting(BooleanSetting.USE_PER_GAME_SETTINGS)
+
         if (!SettingsFile.saveCustomGameSetting(gameId, BooleanSetting.USE_PER_GAME_SETTINGS)) {
             fragmentView.showToastMessage(
                 CitraApplication.appContext.getString(
@@ -145,12 +152,14 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                 ),
                 true
             )
-            settings.loadSettings(gameId, settingsActivity)
-            loadSettingsList()
-            return
         }
 
         settings.loadSettings(gameId, settingsActivity)
+
+        // Do not let a stale read-back flip the switch the user just changed.
+        BooleanSetting.USE_PER_GAME_SETTINGS.boolean = enabled
+        settings.getSection(Settings.SECTION_DEBUG)
+            ?.putSetting(BooleanSetting.USE_PER_GAME_SETTINGS)
         loadSettingsList()
     }
 
