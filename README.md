@@ -15,8 +15,8 @@ Here are the stats on my Anbernic RGDS (Base model, Android, Stock OS) :
 | Tomodachi life  | 100% locked  | Mode 1  | No | None |
 | Streetpass Mii Plaza  | 100% average  | Mode 1  | No | Updating does not work, play coins unobtainable. Not a bug |
 | 3DS HOME menu | Almost 100%, working on it | Mode 1 | No | Small stutters when first booted, fine after that |
-| Mario Kart 7 | 80% average, working on it | Mode 2 | No | This is one of the main games I wanted to play, so I'm still optimizing it. |
+| Mario Kart 7 | 95-100% average | Mode 1 | No | This is one of the main games I wanted to play, so I'm still optimizing it to hit 100% locked. |
 | Minicraft 3D (Game of Tobi) | 100% locked on average settings | Mode 1 | No | This is an unofficial port made for the original 3DS. |
 | Minecraft (Official port) | 60-70% average, unlikely to ever reach 100% | Mode 2 | Yes | I seriously doubt we'll ever reach full speed on this one. |
 | Geometry Dash 3DS (AleFunky) | 100% locked | Mode 0/None | No | *Clutterfunk intensifies* |
-| Mario 3D Land | 70%-80% average | Mode 1 | No | None |
+| Mario 3D Land | 75%-85% average | Mode 1 | No | None |
