@@ -24,6 +24,11 @@ enum class BooleanSetting(
         Settings.SECTION_DEBUG,
         false
     ),
+    ENABLE_PERFORMANCE_HACKS(
+        SettingKeys.enable_performance_hacks(),
+        Settings.SECTION_DEBUG,
+        true
+    ),
     UNSAFE_CPU_OPTIMIZATIONS(
         SettingKeys.unsafe_cpu_optimizations(),
         Settings.SECTION_DEBUG,

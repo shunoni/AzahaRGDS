@@ -232,7 +232,8 @@ void RendererOpenGL::RenderToMailbox(const Layout::FramebufferLayout& layout,
 
             // INTEL driver workaround. We can't delete the previous render sync object until we are
             // sure that the presentation is done
-            if (frame->present_fence && !Settings::values.unsafe_skip_gpu_sync.GetValue()) {
+            if (frame->present_fence && !(Settings::values.enable_performance_hacks.GetValue() &&
+                                          Settings::values.unsafe_skip_gpu_sync.GetValue())) {
                 glClientWaitSync(frame->present_fence, 0, GL_TIMEOUT_IGNORED);
             }
 
@@ -244,7 +245,8 @@ void RendererOpenGL::RenderToMailbox(const Layout::FramebufferLayout& layout,
 
             // wait for the presentation to be done
             if (frame->present_fence) {
-                if (!Settings::values.unsafe_skip_gpu_sync.GetValue()) {
+                if (!(Settings::values.enable_performance_hacks.GetValue() &&
+                      Settings::values.unsafe_skip_gpu_sync.GetValue())) {
                     glWaitSync(frame->present_fence, 0, GL_TIMEOUT_IGNORED);
                 }
                 glDeleteSync(frame->present_fence);
@@ -903,7 +905,8 @@ bool RendererOpenGL::TryPresent(int timeout_ms, bool is_secondary) {
         LOG_DEBUG(Render_OpenGL, "Reloading present frame");
         window.mailbox->ReloadPresentFrame(frame, layout.width, layout.height);
     }
-    if (!Settings::values.unsafe_skip_gpu_sync.GetValue()) {
+    if (!(Settings::values.enable_performance_hacks.GetValue() &&
+          Settings::values.unsafe_skip_gpu_sync.GetValue())) {
         glWaitSync(frame->render_fence, 0, GL_TIMEOUT_IGNORED);
     }
     // INTEL workaround.

@@ -661,6 +661,7 @@ struct Values {
     Setting<bool> mii_compatibility_fixes{false, Keys::mii_compatibility_fixes};
     Setting<bool> use_per_game_settings{false, Keys::use_per_game_settings};
     Setting<bool> prevent_frame_limiter_catch_up{false, Keys::prevent_frame_limiter_catch_up};
+    Setting<bool> enable_performance_hacks{true, Keys::enable_performance_hacks};
     Setting<bool> unsafe_cpu_optimizations{true, Keys::unsafe_cpu_optimizations};
     Setting<bool> skip_slow_draw_fallback{true, Keys::skip_slow_draw_fallback};
     Setting<bool> fast_texture_invalidation{true, Keys::fast_texture_invalidation};
@@ -700,6 +701,9 @@ void SetConfiguringGlobal(bool is_global);
 float Volume();
 
 void LogSettings();
+
+// Hash of the settings that affect generated shader source. Used to invalidate shader caches.
+u64 GetShaderCacheSettingsHash();
 
 // Restore the global state of all applicable settings in the Values struct
 void RestoreGlobalState(bool is_powered_on);

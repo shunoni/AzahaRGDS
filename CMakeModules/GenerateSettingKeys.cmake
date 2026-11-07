@@ -126,6 +126,7 @@ foreach(KEY IN ITEMS
     "mii_compatibility_fixes"
     "use_per_game_settings"
     "prevent_frame_limiter_catch_up"
+    "enable_performance_hacks"
     "unsafe_cpu_optimizations"
     "skip_slow_draw_fallback"
     "fast_texture_invalidation"

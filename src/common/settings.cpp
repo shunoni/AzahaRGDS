@@ -9,6 +9,7 @@
 #include "common/android_utils.h"
 #endif
 #include "common/file_util.h"
+#include "common/hash.h"
 #include "common/settings.h"
 
 namespace Settings {
@@ -178,6 +179,7 @@ void LogSettings() {
     log_setting("Debugging_UsePerGameSettings", values.use_per_game_settings.GetValue());
     log_setting("Debugging_PreventFrameLimiterCatchUp",
                 values.prevent_frame_limiter_catch_up.GetValue());
+    log_setting("Debugging_EnablePerformanceHacks", values.enable_performance_hacks.GetValue());
     log_setting("Debugging_UnsafeCpuOptimizations", values.unsafe_cpu_optimizations.GetValue());
     log_setting("Debugging_SkipSlowDrawFallback", values.skip_slow_draw_fallback.GetValue());
     log_setting("Debugging_FastTextureInvalidation",
@@ -192,6 +194,15 @@ void LogSettings() {
 
 bool IsConfiguringGlobal() {
     return configuring_global;
+}
+
+u64 GetShaderCacheSettingsHash() {
+    u64 hash = 0;
+    hash = Common::HashCombine(
+        hash, static_cast<u64>(values.enable_performance_hacks.GetValue()));
+    hash = Common::HashCombine(hash, static_cast<u64>(values.fast_shader_precision.GetValue()));
+    hash = Common::HashCombine(hash, static_cast<u64>(values.mii_compatibility_fixes.GetValue()));
+    return hash;
 }
 
 void SetConfiguringGlobal(bool is_global) {

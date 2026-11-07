@@ -597,6 +597,11 @@ static const char* android_config_default_file_content = (BOOST_HANA_STRING(R"(
 # 0 (default): Off, 1: On
 )") DECLARE_KEY(prevent_frame_limiter_catch_up) BOOST_HANA_STRING(R"(
 
+# Master switch for all performance hacks below. When disabled, every hack is forced off
+# regardless of its individual setting.
+# 0: Off, 1 (default): On
+)") DECLARE_KEY(enable_performance_hacks) BOOST_HANA_STRING(R"(
+
 # Enable unsafe CPU JIT optimizations that trade accuracy for speed
 # 0: Off, 1 (default): On
 )") DECLARE_KEY(unsafe_cpu_optimizations) BOOST_HANA_STRING(R"(

@@ -665,7 +665,8 @@ bool RasterizerOpenGL::Draw(bool accelerate, bool is_indexed) {
 
     vertex_batch.clear();
 
-    if (shadow_rendering && !Settings::values.unsafe_skip_gpu_sync.GetValue()) {
+    if (shadow_rendering && !(Settings::values.enable_performance_hacks.GetValue() &&
+                              Settings::values.unsafe_skip_gpu_sync.GetValue())) {
         glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT | GL_SHADER_IMAGE_ACCESS_BARRIER_BIT |
                         GL_TEXTURE_UPDATE_BARRIER_BIT | GL_FRAMEBUFFER_BARRIER_BIT);
     }

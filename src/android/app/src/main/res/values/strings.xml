@@ -353,6 +353,7 @@
     <string name="internal_resolution_setting_18x">18x Native (7200x4320)</string>
     <string name="performance_warning">Turning off this setting will significantly reduce emulation performance! For the best experience, it is recommended that you leave this setting enabled.</string>
     <string name="debug_warning">Warning: Modifying these settings will slow emulation</string>
+    <string name="hacks_warning">Warning: These hacks trade accuracy for speed and can cause graphical glitches or crashes</string>
     <string name="stereoscopy">Stereoscopy</string>
     <string name="render3d">Stereoscopic 3D Mode</string>
     <string name="render3d_description">Choose the stereoscopic 3D mode for 3D rendering. Side by Side modes are most common in modern use. Anaglyph and Interlaced modes will always apply to all connected displays.</string>
@@ -421,7 +422,7 @@
     <string name="fast_texture_invalidation">Fast Texture Invalidation</string>
     <string name="fast_texture_invalidation_description">Skips copying GPU surfaces back to CPU memory when games partially update texture memory. Disable this if games show stale or corrupted textures.</string>
     <string name="fast_shader_precision">Fast Shader Precision</string>
-    <string name="fast_shader_precision_description">Uses medium precision in OpenGL ES shaders for faster GPU execution. Disable this if games show graphical artifacts.</string>
+    <string name="fast_shader_precision_description">Uses medium precision in OpenGL ES shaders for faster GPU execution. Disable this if games show graphical artifacts. Restart Azahar after changing this setting so shaders are rebuilt.</string>
     <string name="unsafe_skip_texture_flush">Unsafe Skip Texture Readback</string>
     <string name="unsafe_skip_texture_flush_description">Skips copying rendered GPU textures back to CPU memory entirely. Huge speedup, but screenshots, CPU-read effects and texture updates can be wrong or stale. Disable this if games show broken textures.</string>
     <string name="unsafe_skip_gpu_sync">Unsafe Skip GPU Sync</string>
@@ -432,6 +433,8 @@
     <string name="unsafe_fast_shader_math_description">Uses approximate reciprocal and square root instructions and skips NaN sanitization in the ARM64 shader JIT. Much faster on weak CPUs, but shader results can be inaccurate. Restart Azahar after changing this setting.</string>
     <string name="unsafe_skip_page_marking">Unsafe Skip Page Marking</string>
     <string name="unsafe_skip_page_marking_description">Skips marking pages as rasterizer-cached to avoid page table overhead. CPU and GPU memory are no longer fully coherent, which can cause stale textures. Restart Azahar after changing this setting.</string>
+    <string name="enable_performance_hacks">Enable Performance Hacks</string>
+    <string name="enable_performance_hacks_description">Master switch for every performance hack. Turning this off forces all hacks below to behave like stock Azahar without changing their individual toggles. Restart Azahar after changing this setting.</string>
     <string name="mii_compatibility_fixes">Mii Compatibility Fixes</string>
     <string name="mii_compatibility_fixes_description">Restores full shader precision and texture synchronization to address Mii face artifacts or editor crashes. This can reduce performance in Mii-heavy games. Restart Azahar after changing this setting.</string>
     <string name="use_per_game_settings">Use Per-Game Settings</string>
@@ -516,6 +519,7 @@
     <string name="preferences_graphics">Graphics</string>
     <string name="preferences_audio">Audio</string>
     <string name="preferences_debug">Debug</string>
+    <string name="preferences_hacks">Hacks</string>
     <string name="preferences_theme">Theme and Color</string>
     <string name="preferences_layout">Layout</string>
 

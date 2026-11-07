@@ -115,6 +115,8 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
 
             Settings.SECTION_DEBUG -> addDebugSettings(sl)
 
+            Settings.SECTION_HACKS -> addHacksSettings(sl)
+
             Settings.SECTION_THEME -> addThemeSettings(sl)
 
             Settings.SECTION_CUSTOM_LANDSCAPE -> addCustomLandscapeSettings(sl)
@@ -264,6 +266,14 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     0,
                     R.drawable.ic_code,
                     Settings.SECTION_DEBUG
+                )
+            )
+            add(
+                SubmenuSetting(
+                    R.string.preferences_hacks,
+                    0,
+                    R.drawable.ic_hacks,
+                    Settings.SECTION_HACKS
                 )
             )
 
@@ -1232,17 +1242,6 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
             add(HeaderSetting(R.string.advanced))
             add(
                 SingleChoiceSetting(
-                    IntSetting.FRAME_SKIP_MODE,
-                    R.string.frame_skip_mode,
-                    R.string.frame_skip_mode_description,
-                    R.array.frameSkipModeNames,
-                    R.array.frameSkipModeValues,
-                    IntSetting.FRAME_SKIP_MODE.key,
-                    IntSetting.FRAME_SKIP_MODE.defaultValue
-                )
-            )
-            add(
-                SingleChoiceSetting(
                     IntSetting.TEXTURE_SAMPLING,
                     R.string.texture_sampling_name,
                     R.string.texture_sampling_description,
@@ -1250,15 +1249,6 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.array.textureSamplingValues,
                     IntSetting.TEXTURE_SAMPLING.key,
                     IntSetting.TEXTURE_SAMPLING.defaultValue
-                )
-            )
-            add(
-                SwitchSetting(
-                    BooleanSetting.USE_SKIP_DUPLICATE_FRAMES,
-                    R.string.use_skip_duplicate_frames,
-                    R.string.use_skip_duplicate_frames_description,
-                    BooleanSetting.USE_SKIP_DUPLICATE_FRAMES.key,
-                    BooleanSetting.USE_SKIP_DUPLICATE_FRAMES.defaultValue
                 )
             )
 
@@ -1941,67 +1931,10 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
         }
     }
 
-    private fun addDebugSettings(sl: ArrayList<SettingsItem>) {
-        settingsActivity.setToolbarTitle(settingsActivity.getString(R.string.preferences_debug))
+    private fun addHacksSettings(sl: ArrayList<SettingsItem>) {
+        settingsActivity.setToolbarTitle(settingsActivity.getString(R.string.preferences_hacks))
         sl.apply {
-            add(HeaderSetting(R.string.debug_warning))
-            add(
-                SliderSetting(
-                    IntSetting.CPU_CLOCK_SPEED,
-                    R.string.cpu_clock_speed,
-                    0,
-                    25,
-                    400,
-                    "%",
-                    IntSetting.CPU_CLOCK_SPEED.key,
-                    IntSetting.CPU_CLOCK_SPEED.defaultValue.toFloat()
-                )
-            )
-            add(
-                SwitchSetting(
-                    BooleanSetting.CPU_JIT,
-                    R.string.cpu_jit,
-                    R.string.cpu_jit_description,
-                    BooleanSetting.CPU_JIT.key,
-                    BooleanSetting.CPU_JIT.defaultValue
-                )
-            )
-            add(
-                SwitchSetting(
-                    BooleanSetting.USE_FASTINTERP,
-                    R.string.use_fastinterp,
-                    R.string.use_fastinterp_description,
-                    BooleanSetting.USE_FASTINTERP.key,
-                    BooleanSetting.USE_FASTINTERP.defaultValue
-                )
-            )
-            add(
-                SwitchSetting(
-                    BooleanSetting.HW_SHADER,
-                    R.string.hw_shaders,
-                    R.string.hw_shaders_description,
-                    BooleanSetting.HW_SHADER.key,
-                    BooleanSetting.HW_SHADER.defaultValue
-                )
-            )
-            add(
-                SwitchSetting(
-                    BooleanSetting.SHADER_JIT,
-                    R.string.shader_jit,
-                    R.string.shader_jit_description,
-                    BooleanSetting.SHADER_JIT.key,
-                    BooleanSetting.SHADER_JIT.defaultValue
-                )
-            )
-            add(
-                SwitchSetting(
-                    BooleanSetting.VSYNC,
-                    R.string.vsync,
-                    R.string.vsync_description,
-                    BooleanSetting.VSYNC.key,
-                    BooleanSetting.VSYNC.defaultValue
-                )
-            )
+            add(HeaderSetting(R.string.hacks_warning))
             add(
                 SwitchSetting(
                     BooleanSetting.SIMULATE_3DS_GPU_TIMINGS,
@@ -2013,29 +1946,40 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
             )
             add(
                 SwitchSetting(
-                    BooleanSetting.DEBUG_RENDERER,
-                    R.string.renderer_debug,
-                    R.string.renderer_debug_description,
-                    BooleanSetting.DEBUG_RENDERER.key,
-                    BooleanSetting.DEBUG_RENDERER.defaultValue
-                )
-            )
-            add(
-                SwitchSetting(
-                    BooleanSetting.INSTANT_DEBUG_LOG,
-                    R.string.instant_debug_log,
-                    R.string.instant_debug_log_description,
-                    BooleanSetting.INSTANT_DEBUG_LOG.key,
-                    BooleanSetting.INSTANT_DEBUG_LOG.defaultValue
-                )
-            )
-            add(
-                SwitchSetting(
                     BooleanSetting.PREVENT_FRAME_LIMITER_CATCH_UP,
                     R.string.prevent_frame_limiter_catch_up,
                     R.string.prevent_frame_limiter_catch_up_description,
                     BooleanSetting.PREVENT_FRAME_LIMITER_CATCH_UP.key,
                     BooleanSetting.PREVENT_FRAME_LIMITER_CATCH_UP.defaultValue
+                )
+            )
+            add(
+                SingleChoiceSetting(
+                    IntSetting.FRAME_SKIP_MODE,
+                    R.string.frame_skip_mode,
+                    R.string.frame_skip_mode_description,
+                    R.array.frameSkipModeNames,
+                    R.array.frameSkipModeValues,
+                    IntSetting.FRAME_SKIP_MODE.key,
+                    IntSetting.FRAME_SKIP_MODE.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.USE_SKIP_DUPLICATE_FRAMES,
+                    R.string.use_skip_duplicate_frames,
+                    R.string.use_skip_duplicate_frames_description,
+                    BooleanSetting.USE_SKIP_DUPLICATE_FRAMES.key,
+                    BooleanSetting.USE_SKIP_DUPLICATE_FRAMES.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.ENABLE_PERFORMANCE_HACKS,
+                    R.string.enable_performance_hacks,
+                    R.string.enable_performance_hacks_description,
+                    BooleanSetting.ENABLE_PERFORMANCE_HACKS.key,
+                    BooleanSetting.ENABLE_PERFORMANCE_HACKS.defaultValue
                 )
             )
             add(
@@ -2117,6 +2061,88 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.unsafe_skip_page_marking_description,
                     BooleanSetting.UNSAFE_SKIP_PAGE_MARKING.key,
                     BooleanSetting.UNSAFE_SKIP_PAGE_MARKING.defaultValue
+                )
+            )
+        }
+    }
+
+    private fun addDebugSettings(sl: ArrayList<SettingsItem>) {
+        settingsActivity.setToolbarTitle(settingsActivity.getString(R.string.preferences_debug))
+        sl.apply {
+            add(HeaderSetting(R.string.debug_warning))
+            add(
+                SliderSetting(
+                    IntSetting.CPU_CLOCK_SPEED,
+                    R.string.cpu_clock_speed,
+                    0,
+                    25,
+                    400,
+                    "%",
+                    IntSetting.CPU_CLOCK_SPEED.key,
+                    IntSetting.CPU_CLOCK_SPEED.defaultValue.toFloat()
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.CPU_JIT,
+                    R.string.cpu_jit,
+                    R.string.cpu_jit_description,
+                    BooleanSetting.CPU_JIT.key,
+                    BooleanSetting.CPU_JIT.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.USE_FASTINTERP,
+                    R.string.use_fastinterp,
+                    R.string.use_fastinterp_description,
+                    BooleanSetting.USE_FASTINTERP.key,
+                    BooleanSetting.USE_FASTINTERP.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.HW_SHADER,
+                    R.string.hw_shaders,
+                    R.string.hw_shaders_description,
+                    BooleanSetting.HW_SHADER.key,
+                    BooleanSetting.HW_SHADER.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.SHADER_JIT,
+                    R.string.shader_jit,
+                    R.string.shader_jit_description,
+                    BooleanSetting.SHADER_JIT.key,
+                    BooleanSetting.SHADER_JIT.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.VSYNC,
+                    R.string.vsync,
+                    R.string.vsync_description,
+                    BooleanSetting.VSYNC.key,
+                    BooleanSetting.VSYNC.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.DEBUG_RENDERER,
+                    R.string.renderer_debug,
+                    R.string.renderer_debug_description,
+                    BooleanSetting.DEBUG_RENDERER.key,
+                    BooleanSetting.DEBUG_RENDERER.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.INSTANT_DEBUG_LOG,
+                    R.string.instant_debug_log,
+                    R.string.instant_debug_log_description,
+                    BooleanSetting.INSTANT_DEBUG_LOG.key,
+                    BooleanSetting.INSTANT_DEBUG_LOG.defaultValue
                 )
             )
             add(
