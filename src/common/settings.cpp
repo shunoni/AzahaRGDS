@@ -9,7 +9,6 @@
 #include "common/android_utils.h"
 #endif
 #include "common/file_util.h"
-#include "common/hash.h"
 #include "common/settings.h"
 
 namespace Settings {
@@ -197,11 +196,13 @@ bool IsConfiguringGlobal() {
 }
 
 u64 GetShaderCacheSettingsHash() {
-    u64 hash = 0;
-    hash = Common::HashCombine(
-        hash, static_cast<u64>(values.enable_performance_hacks.GetValue()));
-    hash = Common::HashCombine(hash, static_cast<u64>(values.fast_shader_precision.GetValue()));
-    hash = Common::HashCombine(hash, static_cast<u64>(values.mii_compatibility_fixes.GetValue()));
+    u64 hash = 0x9e3779b97f4a7c15ULL;
+    const auto mix = [&hash](u64 value) {
+        hash ^= value + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+    };
+    mix(static_cast<u64>(values.enable_performance_hacks.GetValue()));
+    mix(static_cast<u64>(values.fast_shader_precision.GetValue()));
+    mix(static_cast<u64>(values.mii_compatibility_fixes.GetValue()));
     return hash;
 }
 
